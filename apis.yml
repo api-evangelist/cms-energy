@@ -1,7 +1,11 @@
 aid: cms-energy
-url: https://raw.githubusercontent.com/api-evangelist/cms-energy/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/cms-energy/refs/heads/main/apis.yml
 modified: '2026-03-21'
 apis: []
 common:
   - type: Website
     url: https://www.cms-energy.com
+description: >-
+  CMS Energy is an energy holding company whose primary subsidiary is Consumers Energy,
+  an electric and natural gas utility serving customers in Michigan.
