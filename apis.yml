@@ -1,7 +1,7 @@
 aid: cms-energy
 url: https://raw.githubusercontent.com/api-evangelist/cms-energy/refs/heads/main/apis.yml
 name: CMS Energy
-x-type: company
+kind: company
 tags:
   - Electric
   - Energy
