@@ -11,7 +11,7 @@ tags:
   - Utility
   - Fortune 500
 type: Index
-image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 access: 3rd-Party
 created: '2026-03-21'
 modified: '2026-04-23'
@@ -33,7 +33,7 @@ apis:
       - OAuth2
       - Smart Meter
       - Utility
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://utilityapi.com/docs/utilities/consumersenergy
     properties:
       - url: https://utilityapi.com/docs/utilities/consumersenergy
