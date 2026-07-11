@@ -74,6 +74,10 @@ apis:
       - name: Sustainability Reporting
         description: Aggregate usage into Scope 2 emissions and ESG reporting.
 common:
+  - type: DomainSecurity
+    url: security/cms-energy-domain-security.yml
+  - type: Authentication
+    url: authentication/cms-energy-authentication.yml
   - type: OAuthScopes
     url: scopes/cms-energy-scopes.yml
   - url: https://www.cmsenergy.com
