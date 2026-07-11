@@ -1,0 +1,17 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/cms-energy-openapi.yml
+schemes:
+- name: oauth2
+  source: openapi/cms-energy-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://utilityapi.com/authorize
+    tokenUrl: https://utilityapi.com/api/v2/oauth/token
+scopes:
+- scope: auth-sso
+  description: Production single-sign-on scope (Consumers Energy)
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/cms-energy-openapi.yml
