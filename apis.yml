@@ -74,6 +74,8 @@ apis:
       - name: Sustainability Reporting
         description: Aggregate usage into Scope 2 emissions and ESG reporting.
 common:
+  - type: AgenticAccess
+    url: agentic-access/cms-energy-agentic-access.yml
   - type: DomainSecurity
     url: security/cms-energy-domain-security.yml
   - type: Authentication
