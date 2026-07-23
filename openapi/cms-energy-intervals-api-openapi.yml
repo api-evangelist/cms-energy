@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  title: Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Intervals API
+  description: 'Best-effort OpenAPI 3.1 description of UtilityAPI''s REST surface for the
+
+    Consumers Energy Green Button Connect My Data program. The API exposes
+
+    authorizations, meters, bills, and interval/usage data, plus the
+
+    Green Button XML batch resource. Authentication uses OAuth 2.0 (the
+
+    Green Button OAuth flow); third parties must be pre-registered with
+
+    Consumers Energy and use utility ID `CONSUMERSENERGY`.
+
+    '
+  version: '2.0'
+  contact:
+    name: UtilityAPI - Consumers Energy
+    url: https://utilityapi.com/docs/utilities/consumersenergy
+servers:
+- url: https://utilityapi.com/api/v2
+security:
+- oauth2: []
+- bearerAuth: []
+tags:
+- name: Intervals
+paths:
+  /intervals:
+    get:
+      summary: List interval (usage) data
+      operationId: listIntervals
+      tags:
+      - Intervals
+      parameters:
+      - in: query
+        name: meters
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of intervals
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://utilityapi.com/authorize
+          tokenUrl: https://utilityapi.com/api/v2/oauth/token
+          scopes:
+            auth-sso: Production single-sign-on scope (Consumers Energy)
+    bearerAuth:
+      type: http
+      scheme: bearer

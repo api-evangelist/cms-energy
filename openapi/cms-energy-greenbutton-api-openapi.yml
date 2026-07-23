@@ -1,0 +1,68 @@
+openapi: 3.1.0
+info:
+  title: Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations GreenButton API
+  description: 'Best-effort OpenAPI 3.1 description of UtilityAPI''s REST surface for the
+
+    Consumers Energy Green Button Connect My Data program. The API exposes
+
+    authorizations, meters, bills, and interval/usage data, plus the
+
+    Green Button XML batch resource. Authentication uses OAuth 2.0 (the
+
+    Green Button OAuth flow); third parties must be pre-registered with
+
+    Consumers Energy and use utility ID `CONSUMERSENERGY`.
+
+    '
+  version: '2.0'
+  contact:
+    name: UtilityAPI - Consumers Energy
+    url: https://utilityapi.com/docs/utilities/consumersenergy
+servers:
+- url: https://utilityapi.com/api/v2
+security:
+- oauth2: []
+- bearerAuth: []
+tags:
+- name: GreenButton
+paths:
+  /DataCustodian/espi/1_1/resource/Batch/Subscription/{subscriptionId}/UsagePoint/{usagePointId}:
+    parameters:
+    - in: path
+      name: subscriptionId
+      required: true
+      schema:
+        type: string
+    - in: path
+      name: usagePointId
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Green Button ESPI batch resource
+      description: 'Retrieves Green Button ESPI 1.1 batch XML for the given subscription
+
+        and usage point. Returned as application/atom+xml.
+
+        '
+      operationId: getEspiBatch
+      tags:
+      - GreenButton
+      responses:
+        '200':
+          description: ESPI batch XML
+          content:
+            application/atom+xml: {}
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://utilityapi.com/authorize
+          tokenUrl: https://utilityapi.com/api/v2/oauth/token
+          scopes:
+            auth-sso: Production single-sign-on scope (Consumers Energy)
+    bearerAuth:
+      type: http
+      scheme: bearer
