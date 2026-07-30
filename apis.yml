@@ -11,7 +11,20 @@ tags:
   - Utility
   - Fortune 500
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cms-energy.png
 access: 3rd-Party
 created: '2026-03-21'
 modified: '2026-04-23'
@@ -25,54 +38,97 @@ description: >-
   management, demand response, EV charging, solar, and sustainability
   applications.
 apis:
-  - aid: cms-energy:consumers-green-button-api
-    name: Consumers Energy Green Button Connect My Data API
-    tags:
-      - Energy Usage
-      - Green Button
-      - OAuth2
-      - Smart Meter
-      - Utility
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://utilityapi.com/docs/utilities/consumersenergy
-    properties:
-      - url: https://utilityapi.com/docs/utilities/consumersenergy
-        type: Documentation
-      - url: https://utilityapi.com/
-        type: Portal
-    description: >-
-      The Consumers Energy Green Button Connect My Data API exposes
-      customer-authorized electric and natural-gas usage data to registered
-      third parties using the NAESB ESPI / Green Button standard. Authorization
-      uses OAuth 2.0 with single sign-on or test-account scopes; data is
-      delivered as Green Button XML or JSON via UtilityAPI's standardized
-      endpoints (Meters, Bills, Intervals, Billing Summaries). Third parties
-      register with Consumers Energy, are issued a client_id, and start in
-      sandbox mode before being approved for live data.
-    x-features:
-      - name: Green Button Standard
-        description: NAESB ESPI / Green Button XML for usage point and interval data.
-      - name: Meters Endpoint
-        description: Retrieve individual meter information for an authorized customer.
-      - name: Bills Endpoint
-        description: Retrieve bill history and charges.
-      - name: Intervals Endpoint
-        description: Retrieve granular interval-usage time series.
-      - name: Billing Summaries
-        description: Retrieve account-level summary data.
-      - name: OAuth 2.0
-        description: Customer authorization via OAuth 2.0 with SSO or test scopes.
-      - name: Sandbox Test Accounts
-        description: Built-in test residential and commercial scenarios for development.
-    x-useCases:
-      - name: Energy Efficiency
-        description: Pull usage data into energy efficiency and benchmarking apps.
-      - name: Demand Response
-        description: Power demand-response and load-management programs.
-      - name: Solar and EV
-        description: Inform solar sizing and EV-charging optimization with real usage.
-      - name: Sustainability Reporting
-        description: Aggregate usage into Scope 2 emissions and ESG reporting.
+- aid: cms-energy:consumers-green-button-api
+  name: Consumers Energy Green Button Connect My Data API
+  tags:
+  - Energy Usage
+  - Green Button
+  - OAuth2
+  - Smart Meter
+  - Utility
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  properties:
+  - url: https://utilityapi.com/docs/utilities/consumersenergy
+    type: Documentation
+  - url: https://utilityapi.com/
+    type: Portal
+  description: >-
+    The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas
+    usage data to registered third parties using the NAESB ESPI / Green Button standard. Authorization
+    uses OAuth 2.0 with single sign-on or test-account scopes; data is delivered as Green Button XML or
+    JSON via UtilityAPI's standardized endpoints (Meters, Bills, Intervals, Billing Summaries). Third
+    parties register with Consumers Energy, are issued a client_id, and start in sandbox mode before being
+    approved for live data.
+  x-features:
+  - name: Green Button Standard
+    description: NAESB ESPI / Green Button XML for usage point and interval data.
+  - name: Meters Endpoint
+    description: Retrieve individual meter information for an authorized customer.
+  - name: Bills Endpoint
+    description: Retrieve bill history and charges.
+  - name: Intervals Endpoint
+    description: Retrieve granular interval-usage time series.
+  - name: Billing Summaries
+    description: Retrieve account-level summary data.
+  - name: OAuth 2.0
+    description: Customer authorization via OAuth 2.0 with SSO or test scopes.
+  - name: Sandbox Test Accounts
+    description: Built-in test residential and commercial scenarios for development.
+  x-useCases:
+  - name: Energy Efficiency
+    description: Pull usage data into energy efficiency and benchmarking apps.
+  - name: Demand Response
+    description: Power demand-response and load-management programs.
+  - name: Solar and EV
+    description: Inform solar sizing and EV-charging optimization with real usage.
+  - name: Sustainability Reporting
+    description: Aggregate usage into Scope 2 emissions and ESG reporting.
+- aid: cms-energy:cms-energy-authorizations-api
+  name: CMS Energy Authorizations API
+  description: The Authorizations API from CMS Energy — 2 operation(s) for authorizations.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  tags:
+  - Authorizations
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-authorizations-api-openapi.yml
+- aid: cms-energy:cms-energy-bills-api
+  name: CMS Energy Bills API
+  description: The Bills API from CMS Energy — 1 operation(s) for bills.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  tags:
+  - Bills
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-bills-api-openapi.yml
+- aid: cms-energy:cms-energy-greenbutton-api
+  name: CMS Energy GreenButton API
+  description: The GreenButton API from CMS Energy — 1 operation(s) for greenbutton.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  tags:
+  - GreenButton
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-greenbutton-api-openapi.yml
+- aid: cms-energy:cms-energy-intervals-api
+  name: CMS Energy Intervals API
+  description: The Intervals API from CMS Energy — 1 operation(s) for intervals.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  tags:
+  - Intervals
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-intervals-api-openapi.yml
+- aid: cms-energy:cms-energy-meters-api
+  name: CMS Energy Meters API
+  description: The Meters API from CMS Energy — 2 operation(s) for meters.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  tags:
+  - Meters
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-meters-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/cms-energy-agentic-access.yml
