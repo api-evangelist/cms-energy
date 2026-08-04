@@ -1,0 +1,22 @@
+{
+  "provider": "cms-energy",
+  "sources": [
+    "cms-energy-authorizations-api-openapi.yml",
+    "cms-energy-bills-api-openapi.yml",
+    "cms-energy-greenbutton-api-openapi.yml",
+    "cms-energy-intervals-api-openapi.yml",
+    "cms-energy-meters-api-openapi.yml"
+  ],
+  "outputs": [
+    "cms-energy-authorizations-api-openapi.yml",
+    "cms-energy-bills-api-openapi.yml",
+    "cms-energy-greenbutton-api-openapi.yml",
+    "cms-energy-intervals-api-openapi.yml",
+    "cms-energy-meters-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
