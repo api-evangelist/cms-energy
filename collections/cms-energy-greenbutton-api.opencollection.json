@@ -1,0 +1,53 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations GreenButton API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://utilityapi.com/authorize",
+      "accessTokenUrl": "https://utilityapi.com/api/v2/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "GreenButton",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Green Button ESPI batch resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://utilityapi.com/api/v2/DataCustodian/espi/1_1/resource/Batch/Subscription/:subscriptionId/UsagePoint/:usagePointId",
+            "params": [
+              {
+                "name": "subscriptionId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "usagePointId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves Green Button ESPI 1.1 batch XML for the given subscription\nand usage point. Returned as application/atom+xml.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

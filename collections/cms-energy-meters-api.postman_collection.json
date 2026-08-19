@@ -1,0 +1,213 @@
+{
+  "item": [
+    {
+      "id": "02de62f2-470e-46b1-a031-ecb1b88016ef",
+      "name": "Meters",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b3307eff-8f7c-4d0b-a55b-86bc3d4813f7",
+          "name": "List meters",
+          "request": {
+            "name": "List meters",
+            "description": {},
+            "url": {
+              "path": [
+                "meters"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "meters",
+                  "value": "<string>",
+                  "description": "Filter by meter id(s)."
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c7baa90f-79c9-45db-813a-4fa59dbdf0d7",
+              "name": "List of meters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "meters"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "meters",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fa88d5dd-d366-44f7-a9e6-a247b7ece42c",
+          "name": "Get a meter",
+          "request": {
+            "name": "Get a meter",
+            "description": {},
+            "url": {
+              "path": [
+                "meters",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d15c03e1-69bc-46eb-954c-ec7c766fd631",
+              "name": "Meter details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "meters",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://utilityapi.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "auth-sso"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://utilityapi.com/api/v2/oauth/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://utilityapi.com/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "0feb6d8e-596d-45df-b33a-b24548b40577",
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Meters API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Best-effort OpenAPI 3.1 description of UtilityAPI's REST surface for the\nConsumers Energy Green Button Connect My Data program. The API exposes\nauthorizations, meters, bills, and interval/usage data, plus the\nGreen Button XML batch resource. Authentication uses OAuth 2.0 (the\nGreen Button OAuth flow); third parties must be pre-registered with\nConsumers Energy and use utility ID `CONSUMERSENERGY`.\n\n\nContact Support:\n Name: UtilityAPI - Consumers Energy",
+      "type": "text/plain"
+    }
+  }
+}

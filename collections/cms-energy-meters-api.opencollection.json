@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Meters API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://utilityapi.com/authorize",
+      "accessTokenUrl": "https://utilityapi.com/api/v2/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Meters",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List meters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://utilityapi.com/api/v2/meters",
+            "params": [
+              {
+                "name": "meters",
+                "value": "",
+                "type": "query",
+                "description": "Filter by meter id(s)."
+              }
+            ]
+          },
+          "docs": "List meters"
+        },
+        {
+          "info": {
+            "name": "Get a meter",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://utilityapi.com/api/v2/meters/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a meter"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

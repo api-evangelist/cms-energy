@@ -1,0 +1,129 @@
+{
+  "item": [
+    {
+      "id": "827e8cbe-d542-4324-8032-00fe7da01c4f",
+      "name": "Intervals",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ebab379a-128a-4cc1-957b-fada1fd4e8bc",
+          "name": "List interval (usage) data",
+          "request": {
+            "name": "List interval (usage) data",
+            "description": {},
+            "url": {
+              "path": [
+                "intervals"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "meters",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5b5b655c-7de3-4b5c-aa26-b077e83050e2",
+              "name": "List of intervals",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "intervals"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "meters",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://utilityapi.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "auth-sso"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://utilityapi.com/api/v2/oauth/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://utilityapi.com/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "bf7db7c1-ee7b-4f52-815f-9ff327e1a04f",
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Intervals API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Best-effort OpenAPI 3.1 description of UtilityAPI's REST surface for the\nConsumers Energy Green Button Connect My Data program. The API exposes\nauthorizations, meters, bills, and interval/usage data, plus the\nGreen Button XML batch resource. Authentication uses OAuth 2.0 (the\nGreen Button OAuth flow); third parties must be pre-registered with\nConsumers Energy and use utility ID `CONSUMERSENERGY`.\n\n\nContact Support:\n Name: UtilityAPI - Consumers Energy",
+      "type": "text/plain"
+    }
+  }
+}

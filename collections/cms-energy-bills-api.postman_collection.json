@@ -1,0 +1,129 @@
+{
+  "item": [
+    {
+      "id": "a6556dd9-b2a5-4969-b8a7-e46a17e2fb4d",
+      "name": "Bills",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7e73bf8c-d001-4e39-b923-09509fe9f4c9",
+          "name": "List bills",
+          "request": {
+            "name": "List bills",
+            "description": {},
+            "url": {
+              "path": [
+                "bills"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "meters",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1dc78251-c63f-4380-9601-cba38af42c90",
+              "name": "List of bills",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "bills"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "meters",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://utilityapi.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "auth-sso"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://utilityapi.com/api/v2/oauth/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://utilityapi.com/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e008c5ec-9eb9-4dd6-a9f6-acbbfbb21bb6",
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Bills API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Best-effort OpenAPI 3.1 description of UtilityAPI's REST surface for the\nConsumers Energy Green Button Connect My Data program. The API exposes\nauthorizations, meters, bills, and interval/usage data, plus the\nGreen Button XML batch resource. Authentication uses OAuth 2.0 (the\nGreen Button OAuth flow); third parties must be pre-registered with\nConsumers Energy and use utility ID `CONSUMERSENERGY`.\n\n\nContact Support:\n Name: UtilityAPI - Consumers Energy",
+      "type": "text/plain"
+    }
+  }
+}

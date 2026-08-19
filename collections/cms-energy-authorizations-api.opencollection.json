@@ -1,0 +1,77 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://utilityapi.com/authorize",
+      "accessTokenUrl": "https://utilityapi.com/api/v2/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authorizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List authorizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://utilityapi.com/api/v2/authorizations"
+          },
+          "docs": "List authorizations"
+        },
+        {
+          "info": {
+            "name": "Get an authorization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://utilityapi.com/api/v2/authorizations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get an authorization"
+        },
+        {
+          "info": {
+            "name": "Revoke an authorization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://utilityapi.com/api/v2/authorizations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Revoke an authorization"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,177 @@
+{
+  "item": [
+    {
+      "id": "ff82e700-2070-481b-b8f8-8fc245693092",
+      "name": "GreenButton",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4371601e-5c17-41d6-ac57-8fa721de9b53",
+          "name": "Green Button ESPI batch resource",
+          "request": {
+            "name": "Green Button ESPI batch resource",
+            "description": {
+              "content": "Retrieves Green Button ESPI 1.1 batch XML for the given subscription\nand usage point. Returned as application/atom+xml.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "DataCustodian",
+                "espi",
+                "1_1",
+                "resource",
+                "Batch",
+                "Subscription",
+                ":subscriptionId",
+                "UsagePoint",
+                ":usagePointId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subscriptionId",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "usagePointId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/atom+xml"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "acb7a541-8246-4840-9eb7-06e272f51139",
+              "name": "ESPI batch XML",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "DataCustodian",
+                    "espi",
+                    "1_1",
+                    "resource",
+                    "Batch",
+                    "Subscription",
+                    ":subscriptionId",
+                    "UsagePoint",
+                    ":usagePointId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subscriptionId",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "usagePointId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/atom+xml"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/atom+xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://utilityapi.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "auth-sso"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://utilityapi.com/api/v2/oauth/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://utilityapi.com/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4c96200a-b536-45a7-8eaa-1254d2c1060c",
+    "name": "Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations GreenButton API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Best-effort OpenAPI 3.1 description of UtilityAPI's REST surface for the\nConsumers Energy Green Button Connect My Data program. The API exposes\nauthorizations, meters, bills, and interval/usage data, plus the\nGreen Button XML batch resource. Authentication uses OAuth 2.0 (the\nGreen Button OAuth flow); third parties must be pre-registered with\nConsumers Energy and use utility ID `CONSUMERSENERGY`.\n\n\nContact Support:\n Name: UtilityAPI - Consumers Energy",
+      "type": "text/plain"
+    }
+  }
+}
