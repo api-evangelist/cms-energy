@@ -43,6 +43,12 @@ apis:
   tags:
   - Energy Usage
   - Green Button
+  - Authentication
+  - Smart Meter
+  - Utility
+  tags_raw:
+  - Energy Usage
+  - Green Button
   - OAuth2
   - Smart Meter
   - Utility
@@ -107,6 +113,8 @@ apis:
   description: The GreenButton API from CMS Energy — 1 operation(s) for greenbutton.
   humanURL: https://utilityapi.com/docs/utilities/consumersenergy
   tags:
+  - Green Button
+  tags_raw:
   - GreenButton
   properties:
   - type: OpenAPI
