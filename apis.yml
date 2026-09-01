@@ -124,7 +124,7 @@ apis:
   description: The GreenButton API from CMS Energy — 1 operation(s) for greenbutton.
   humanURL: https://utilityapi.com/docs/utilities/consumersenergy
   tags:
-  - GreenButton
+  - Green Button
   tags_raw:
   - GreenButton
   properties:
