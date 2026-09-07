@@ -1,0 +1,136 @@
+generated: '2026-09-06'
+method: derived
+source: openapi/ (all six specs in this repo)
+status: candidate
+description: >-
+  CANDIDATE MCP tool surface for CMS Energy. Neither CMS Energy, Consumers Energy, nor the
+  platform operating its Green Button Connect My Data program publishes an MCP server. A
+  third-party MCP catalogue (vinkius-labs/mcp-database) carries a "UtilityAPI" entry, but it is
+  a community-authored metadata record, not a server the provider ships, and it is not recorded
+  here as one. The tools below are DERIVED from operations that exist in this repo's OpenAPI —
+  nothing was invented, and no endpoint was guessed.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+  note: >-
+    Nobody ships a server. `mode: none` is the honest value: there is no URL an agent can POST to
+    and no package a human can install. The `auth` an eventual server would need differs per
+    surface — none for the ArcGIS tools, bearer token plus a customer authorization for the Green
+    Button tools.
+surfaces:
+  - name: Consumers Energy ArcGIS outage services
+    base: https://www.consumersenergy.com/arcgispublic/rest
+    auth: none
+    gated: false
+    operator: Consumers Energy (first party)
+    spec: openapi/cms-energy-outage-map-api-openapi.yml
+  - name: Consumers Energy Green Button Connect My Data
+    base: https://utilityapi.com/api/v2
+    auth: bearer + per-customer OAuth authorization
+    gated: true
+    operator: UtilityAPI, under licence to Consumers Energy
+    spec: openapi/cms-energy-authorizations-api-openapi.yml (and siblings)
+tools:
+  - name: list_county_outages
+    description: >-
+      List current Consumers Energy outage counts by Michigan county, with customer counts,
+      outage counts, percentage out and last-updated time.
+    rest: [queryServiceDashboardLayer]
+    binding: GET /services/ServiceDashboard/MapServer/3/query
+    auth: none
+    consequence: read
+    confidence: high
+  - name: list_city_outages
+    description: List current Consumers Energy outage counts by city.
+    rest: [queryServiceDashboardLayer]
+    binding: GET /services/ServiceDashboard/MapServer/4/query
+    auth: none
+    consequence: read
+    confidence: high
+  - name: list_active_outage_jobs
+    description: >-
+      List active outage jobs with customers affected, cause code and description, outage time
+      and estimated restoration time.
+    rest: [queryOutageMapLayer]
+    binding: GET /services/CEOutageMap/MapServer/{1|2|5}/query
+    auth: none
+    consequence: read
+    confidence: high
+  - name: get_service_territory
+    description: Retrieve the Consumers Energy electric service-territory polygon.
+    rest: [queryOutageMapLayer]
+    binding: GET /services/CEOutageMap/MapServer/0/query
+    auth: none
+    consequence: read
+    confidence: high
+  - name: describe_outage_layers
+    description: Discover the published outage layers and their field schemas before querying.
+    rest: [describeOutageMapService, describeOutageMapLayer, describeServiceDashboardMapService, describeServiceDashboardLayer]
+    auth: none
+    consequence: read
+    confidence: high
+  - name: list_authorizations
+    description: List the Consumers Energy customer data-sharing authorizations granted to this third party.
+    rest: [listAuthorizations]
+    auth: bearer
+    consequence: read
+    confidence: high
+  - name: get_authorization
+    description: Retrieve one authorization by uid.
+    rest: [getAuthorization]
+    auth: bearer
+    consequence: read
+    confidence: high
+  - name: revoke_authorization
+    description: Revoke a customer's data-sharing authorization.
+    rest: [deleteAuthorization]
+    auth: bearer
+    consequence: safety-critical
+    human_in_the_loop: true
+    confidence: high
+    note: >-
+      Irreversible from the third party's side — revocation deletes collected data and access
+      credentials, and regaining access requires a new customer authorization.
+  - name: list_meters
+    description: List meters covered by an authorization.
+    rest: [listMeters]
+    auth: bearer
+    consequence: read
+    confidence: high
+  - name: get_meter
+    description: Retrieve one meter by uid.
+    rest: [getMeter]
+    auth: bearer
+    consequence: read
+    confidence: high
+  - name: list_bills
+    description: Retrieve bill history for authorized meters.
+    rest: [listBills]
+    auth: bearer
+    consequence: read
+    confidence: high
+  - name: list_intervals
+    description: Retrieve interval usage time series for authorized meters.
+    rest: [listIntervals]
+    auth: bearer
+    consequence: read
+    confidence: high
+  - name: get_greenbutton_batch_xml
+    description: Download the Green Button ESPI 1.1 batch Atom XML for a subscription and usage point.
+    rest: [getEspiBatch]
+    auth: bearer (ESPI access_token)
+    consequence: read
+    confidence: high
+tool_count: 13
+gaps:
+  - >-
+    The Green Button tools inherit the rate guidance in rate-limits/ — bill and interval
+    downloads at most once a minute — which an MCP server would have to enforce rather than
+    expose raw.
+  - >-
+    No tool can be exercised end to end without a Consumers Energy third-party registration and a
+    customer authorization, so a hosted server would be per-tenant, not public.

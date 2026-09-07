@@ -1,24 +1,138 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/cms-energy-openapi.yml
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/authentication
+docs:
+  - https://utilityapi.com/docs/authentication
+  - https://utilityapi.com/docs/greenbutton/api
+  - https://utilityapi.com/docs/greenbutton/oauth
+  - https://utilityapi.com/docs/utilities/consumersenergy
+description: >-
+  Authentication across the two CMS Energy API surfaces. They could not be more different: the
+  Consumers Energy ArcGIS outage services are fully anonymous, and the Consumers Energy Green
+  Button Connect My Data program is doubly gated — a human-reviewed third-party registration
+  with Consumers Energy, and then a per-customer OAuth authorization on top of it.
 summary:
-  types:
-  - http
-  - oauth2
-  oauth2_flows:
-  - authorizationCode
+  types: [none, http, oauth2]
+  oauth2_flows: [authorizationCode, refreshToken, clientCredentials]
+  anonymous_surface: true
+  gated_surface: true
+surfaces:
+  - name: Consumers Energy ArcGIS outage services
+    base: https://www.consumersenergy.com/arcgispublic/rest
+    auth: none
+    verified: probed
+    evidence:
+      - url: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer/3/query?where=1%3D1&returnCountOnly=true&f=json
+        status: 200
+        note: Answered anonymously with real data.
+    token_service:
+      url: https://www.consumersenergy.com/arcgispublic/tokens/
+      short_lived_token_validity_minutes: 60
+      note: >-
+        ArcGIS reports isTokenBasedSecurity true at /rest/info, but every read probed answered
+        without a token. The token service is presumably for the editing capabilities the
+        FeatureServer advertises; none were exercised.
+      source: https://www.consumersenergy.com/arcgispublic/rest/info?f=json
+  - name: Consumers Energy GBCMD JSON API
+    base: https://utilityapi.com/api/v2
+    auth: bearer api token
+    operator: UtilityAPI, under licence to Consumers Energy
+  - name: Consumers Energy Green Button REST API (OpenESPI)
+    base: https://utilityapi.com/DataCustodian/espi/1_1/resource
+    auth: bearer, one of three ESPI token classes
+    operator: UtilityAPI, under licence to Consumers Energy
 schemes:
-- name: oauth2
-  type: oauth2
-  flows:
-  - flow: authorizationCode
-    authorizationUrl: https://utilityapi.com/authorize
-    tokenUrl: https://utilityapi.com/api/v2/oauth/token
-    scopes: 1
-  sources:
-  - openapi/cms-energy-openapi.yml
-- name: bearerAuth
-  type: http
-  scheme: bearer
-  sources:
-  - openapi/cms-energy-openapi.yml
+  - name: none
+    type: none
+    applies_to: Consumers Energy ArcGIS outage services
+  - name: apiToken
+    type: http
+    scheme: bearer
+    in: header
+    header: Authorization
+    format: 'Bearer <api_token>'
+    alternative:
+      in: query
+      parameter: access_token
+      note: >-
+        Documented and supported, but it puts a credential in the URL — prefer the header. Tokens
+        are generated and expired from user settings.
+    applies_to: Consumers Energy GBCMD JSON API
+    backwards_compatible_with: >-
+      The same JSON API token also authenticates every Green Button API endpoint, and a logged-in
+      dashboard session cookie works too.
+    source: https://utilityapi.com/docs/authentication
+  - name: oauth2
+    type: oauth2
+    flows:
+      - flow: authorizationCode
+        grant_type: authorization_code
+        authorizationUrl_pattern: https://utilityapi.com/DataCustodian/{utility}/oauth/authorize
+        tokenUrl_pattern: https://utilityapi.com/DataCustodian/{utility}/oauth/token
+        client_auth: "HTTP Basic (client_id : client_secret)"
+        access_token_lifetime_seconds: 3600
+        refresh: grant_type=refresh_token against the same token endpoint
+        scopes: see scopes/cms-energy-scopes.yml
+        note: >-
+          The exact CONSUMERSENERGY authorize and token URLs are per-third-party and are shown in
+          the third party's settings only after Consumers Energy approves the registration, so
+          they cannot be published here. The documented example uses the `demo` utility.
+      - flow: clientCredentials
+        grant_type: client_credentials
+        issues: client_access_token
+    applies_to: Consumers Energy Green Button REST API
+    source: https://utilityapi.com/docs/greenbutton/oauth
+  - name: espiTokenClasses
+    type: http
+    scheme: bearer
+    applies_to: Consumers Energy Green Button REST API
+    classes:
+      - name: registration_access_token
+        grants: Registration endpoints
+        expiry: none unless rotated
+      - name: client_access_token
+        grants: Authorization and Bulk endpoints
+        issued_by: client_credentials
+      - name: access_token
+        grants: Resource and Batch endpoints for one authorization
+        issued_by: authorization_code
+        expiry_seconds: 3600
+    failure_mode: >-
+      Presenting a valid token of the WRONG class returns 403, not 401. 401 means missing,
+      expired or invalid.
+    source: https://utilityapi.com/docs/greenbutton/api
+end_user_authentication:
+  method: Consumers Energy single sign-on
+  described_as: OpenIDConnect
+  default: true
+  scope_value: AdditionalScope=auth-sso
+  force_login: Add prompt=on to the authorize URL to skip session reuse.
+  second_factor: >-
+    The utility may send a confirmation code by text or email as a second factor during
+    authorization.
+  test_bypass: AdditionalScope=auth-test-{test_residential|test_commercial|test_empty}
+  source: https://utilityapi.com/docs/utilities/consumersenergy
+onboarding_gate:
+  self_serve: false
+  detail: >-
+    A third party must register with Consumers Energy and is issued a client_id. Registration
+    starts in sandbox mode and only reaches live data after Consumers Energy reviews it and sends
+    an approval email. There is no self-serve path to production.
+  registration_url: https://greenbutton.consumersenergy.com/third-party/register
+  utility_id: CONSUMERSENERGY
+discovery_documents:
+  openid_configuration: false
+  oauth_authorization_server: false
+  oauth_protected_resource: false
+  note: >-
+    None served on any host probed — see well-known/cms-energy-well-known.yml. A client cannot
+    discover the endpoints; it must read them out of its own settings page.
+defects:
+  - field: tokenUrl
+    value: https://utilityapi.com/api/v2/oauth/token
+    found_in: openapi/*-openapi.yml securitySchemes.oauth2
+    probe_status: 404
+    detail: >-
+      This URL is carried in the OpenAPI securitySchemes in this repo and does not exist. It was
+      authored into the scaffolded spec rather than harvested. The real token endpoint is the
+      per-utility DataCustodian path. Recorded here rather than silently patched.

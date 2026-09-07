@@ -1,17 +1,174 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/cms-energy-openapi.yml
-schemes:
-- name: oauth2
-  source: openapi/cms-energy-openapi.yml
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/greenbutton/scope
+docs: https://utilityapi.com/docs/greenbutton/scope
+description: >-
+  Authorization scope reference for the Consumers Energy Green Button Connect My Data program.
+  Green Button does not use OAuth scope as a flat list of strings — the scope value is a
+  semicolon-separated parameter string whose required `FB` member is an underscore-joined list of
+  ESPI Function Blocks. Recorded here as the provider documents it, not flattened into
+  pseudo-scopes.
+supersedes: >-
+  The prior derived artifact carried a single scope, `auth-sso`, read from the OpenAPI in this
+  repo. That is an authentication OPTION, not a data scope; it is retained below under
+  additional_scope.
+oauth:
   flows:
-  - flow: authorizationCode
-    authorizationUrl: https://utilityapi.com/authorize
-    tokenUrl: https://utilityapi.com/api/v2/oauth/token
+    - flow: authorizationCode
+      grant_type: authorization_code
+      authorization_endpoint_pattern: https://utilityapi.com/DataCustodian/{utility}/oauth/authorize
+      token_endpoint_pattern: https://utilityapi.com/DataCustodian/{utility}/oauth/token
+      note: >-
+        The exact authorize and token URLs for CONSUMERSENERGY are issued per third party and are
+        shown in the third party's own settings after Consumers Energy approves the registration.
+        They are therefore not publicly enumerable. The `demo` utility variant is the documented
+        example (https://utilityapi.com/DataCustodian/demo/oauth/authorize, probed 401 — exists,
+        gated).
+      token_auth: HTTP Basic with client_id and client_secret
+      token_response: [token_type, access_token, refresh_token, expires_in, scope, resourceURI, customerResourceURI, authorizationURI]
+      access_token_lifetime_seconds: 3600
+    - flow: refreshToken
+      grant_type: refresh_token
+      note: Same token endpoint; POST grant_type=refresh_token with the stored refresh_token.
+    - flow: clientCredentials
+      grant_type: client_credentials
+      note: Issues the client_access_token used for Green Button Authorization and Bulk endpoints.
+      source: https://utilityapi.com/docs/greenbutton/api
+  probed:
+    - url: https://utilityapi.com/authorize
+      status: 200
+      note: The customer-facing "Authorize Access to Utility Data" page. Live.
+    - url: https://utilityapi.com/api/v2/oauth/token
+      status: 404
+      note: >-
+        DEFECT FOUND. This tokenUrl is carried in the OpenAPI securitySchemes in this repo and
+        does not exist — it returns the platform's own not_found envelope. It was authored into
+        the scaffolded spec, not harvested. The real token endpoint is the per-utility
+        DataCustodian path above. Recorded rather than silently corrected, because the spec's
+        securityScheme is what downstream artifacts were derived from.
+    - url: https://utilityapi.com/DataCustodian/espi/1_1/resource/ReadServiceStatus
+      status: 401
+      note: Live and auth-gated, confirming the ESPI resource tree is real.
+scope_string:
+  grammar: 'FB=<FUNCTION_BLOCK_LIST>;<OPTION_NAME>=<OPTION_VALUE>;...'
+  separator: ';'
+  fb_separator: '_'
+  required: [FB]
+  example_request: FB=4_16_51;HistoryLength=34128000
+  example_final: FB=1_3_4_5_8_13_14_18_19_34_35_39_51;IntervalDuration=900_3600;BlockDuration=daily;HistoryLength=34128000;SubscriptionFrequency=daily;AccountCollection=2
+  warning: >-
+    The scope in the authorization URL only PREFILLS the consent form. The customer can edit it,
+    and the platform may add parameters. Always read the final `scope` returned with the access
+    token — it is authoritative, and it may be narrower than what was asked for.
 scopes:
-- scope: auth-sso
-  description: Production single-sign-on scope (Consumers Energy)
-  flows:
-  - authorizationCode
-  sources:
-  - openapi/cms-energy-openapi.yml
+  - scope: FB=4
+    name: Interval Metering
+    description: Access to the customer's anonymous interval usage data.
+    type: function-block
+    requestable: true
+  - scope: FB=16
+    name: Usage Summary with Costs
+    description: Access to the customer's bill data.
+    type: function-block
+    requestable: true
+  - scope: FB=39
+    name: PUSH Model
+    description: >-
+      Push notifications of new data to a configured notify_url. Frequency is set with
+      SubscriptionFrequency.
+    type: function-block
+    requestable: true
+  - scope: FB=51
+    name: Core Retail Customer
+    description: Access to account details — account number, service address and similar.
+    type: function-block
+    requestable: true
+  - scope: HistoryLength
+    name: Historical window
+    description: Seconds of history requested. 0 requests no history.
+    type: option
+    default: 63072000
+    default_human: 2 years
+    requestable: true
+  - scope: PreferredAuthEndDate
+    name: Automatic revocation date
+    description: Unix timestamp at which the authorization auto-revokes. 0 means run until the customer revokes.
+    type: option
+    default: three years from the time of authorization
+    requestable: true
+  - scope: SubscriptionFrequency
+    name: Notification frequency
+    description: How often bulk-download notifications are sent when FB 39 is in scope. Integer days or a named frequency.
+    type: option
+    default: billingPeriod
+    requestable: true
+  - scope: AdditionalScope
+    name: Additional scope options
+    description: Underscore-joined list of universal and utility-specific options.
+    type: option
+    default: ''
+    requestable: true
+  - scope: AdditionalScope=auth-sso
+    name: Consumers Energy single sign-on
+    description: >-
+      Authenticate the customer through Consumers Energy SSO (described in the docs as
+      OpenIDConnect). This is the default for CONSUMERSENERGY.
+    type: additional-scope
+    utility_specific: true
+    source: https://utilityapi.com/docs/utilities/consumersenergy
+  - scope: AdditionalScope=auth-test-{scenario}
+    name: Test-account authentication
+    description: >-
+      Bypass Consumers Energy SSO and authenticate as a published test scenario —
+      test_residential, test_commercial or test_empty.
+    type: additional-scope
+    utility_specific: true
+    source: https://utilityapi.com/docs/utilities/consumersenergy
+informational_only:
+  note: Returned in the final scope string; cannot be requested in the authorization URL.
+  parameters:
+  - name: AccountCollection
+    description: How many UsagePoints the authorization covers.
+  - name: BR
+    description: The Bulk ID for the Bulk API.
+  - name: IntervalDuration
+    description: Interval length in seconds (900 = 15 minutes).
+  - name: BlockDuration
+    description: Interval chunk size in seconds, or a named frequency.
+function_block_reference:
+  note: >-
+    Only 4, 16, 39 and 51 are honoured in an authorization URL. The full ESPI table is returned in
+    the final scope string.
+  blocks:
+    1: Common
+    2: Download My Data
+    3: Connect My Data
+    4: Interval Metering
+    5: Interval Electricity Metering
+    6: Demand Electricity Metering
+    7: Net Metering
+    8: Forward and Reverse Metering
+    9: Register Values
+    10: Gas
+    11: Water
+    12: Cost of Interval Data
+    13: Security and Privacy Classes
+    14: Authorization and Authentication (replaced by FB 31)
+    15: Usage Summary
+    16: Usage Summary with Cost
+    17: Power Quality Summary
+    39: PUSH Model
+    51: Core Retail Customer
+token_classes:
+  source: https://utilityapi.com/docs/greenbutton/api
+  classes:
+  - name: registration_access_token
+    grants: Registration endpoints (third-party ApplicationInformation)
+    lifetime: Does not expire unless rotated
+  - name: client_access_token
+    grants: Authorization endpoints and Bulk endpoints
+    issued_by: grant_type=client_credentials
+  - name: access_token
+    grants: Resource endpoints and Batch endpoints, scoped to one authorization
+    issued_by: grant_type=authorization_code
+    lifetime_seconds: 3600

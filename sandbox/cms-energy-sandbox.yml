@@ -1,0 +1,85 @@
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/utilities/consumersenergy
+description: >-
+  Consumers Energy publishes a real, gated-then-open sandbox for its Green Button Connect My Data
+  program: every third party begins in sandbox mode and can only reach named test accounts until
+  Consumers Energy reviews the registration and switches them to live. The test scenarios below
+  are published verbatim by the program; none were invented.
+modes:
+  - name: sandbox
+    default: true
+    detail: >-
+      Assigned automatically at registration. Requests can only be made against test accounts —
+      real Consumers Energy customers cannot authorize a sandbox third party.
+    exit: >-
+      Consumers Energy reviews the registration and emails the third party when they may switch
+      to Live mode in their settings. It is a human review, not a self-serve toggle.
+  - name: live
+    default: false
+    detail: Real Consumers Energy customer authorizations.
+key_prefixes:
+  documented: false
+  note: >-
+    No test-vs-live API key prefix convention is published; the mode is a property of the
+    registration, not of the token.
+authentication_switch:
+  parameter: scope
+  grammar: 'auth-{type}[-{value}]'
+  full_example: 'scope=FB%3D4_16_51%3BAdditionalScope%3Dauth-test-test_commercial'
+  options:
+    - value: auth-sso
+      takes_value: false
+      detail: >-
+        Default. Authenticate the customer through Consumers Energy single sign-on (described in
+        the docs as OpenIDConnect). Add prompt=on to the authorize URL to force an explicit login
+        screen instead of reusing an existing session.
+    - value: auth-test-{scenario}
+      takes_value: true
+      detail: >-
+        Skip Consumers Energy SSO entirely and authenticate as the named test scenario, landing
+        straight on the OAuth authorization page.
+  source: https://utilityapi.com/docs/utilities/consumersenergy
+test_accounts:
+  - id: test_residential
+    scenario: residential
+    description: A residential customer with 1 account and 2 services (both electric and gas).
+  - id: test_commercial
+    scenario: commercial
+    description: A commercial customer with 2 accounts and 6 services (both electric and gas).
+  - id: test_empty
+    scenario: empty
+    description: >-
+      Error simulation — the customer has no accounts connected to their online profile, or none
+      eligible for data sharing.
+test_credentials:
+  detail: >-
+    Because the Consumers Energy flow defaults to the utility's own SSO, the platform's generic
+    test usernames do not apply. The program instead publishes a dedicated test-account input
+    page reachable from the Consumers Energy utility docs, and the test scenarios can also be
+    selected non-interactively via the scope parameter above.
+  source: https://utilityapi.com/docs/utilities/consumersenergy
+fixtures_and_triggers:
+  - name: Forms test-submit
+    detail: A dedicated test-submit operation on the Forms API for exercising an authorization form.
+    source: https://utilityapi.com/docs/api/forms/test-submit
+  - name: Webhook ping
+    detail: A `ping` event can be triggered manually per webhook endpoint from settings.
+    source: https://utilityapi.com/docs/webhooks
+  - name: Third-party OAuth demo site
+    detail: >-
+      A hosted demo third-party website that can be configured with a real GBCMD client, with
+      built-in redirect handling and data processing. A redirect_uri must be added to the client
+      first.
+    url: https://utilityapi.com/DataCustodian/thirdparty-demo
+    source: https://utilityapi.com/docs/greenbutton/oauth
+time_simulation:
+  supported: false
+  note: No test clock or time-travel facility is documented.
+arcgis_surface:
+  sandbox: false
+  note: >-
+    The first-party Consumers Energy ArcGIS services need no sandbox — they are anonymous and
+    read-only in practice. A `PreProd` folder exists in the REST directory but was empty when
+    probed (HTTP 200, services []).
+  source: https://www.consumersenergy.com/arcgispublic/rest/services/PreProd?f=json

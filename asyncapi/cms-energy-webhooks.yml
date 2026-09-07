@@ -1,0 +1,148 @@
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/webhooks
+description: >-
+  Webhook catalog for the Consumers Energy Green Button Connect My Data program. Consumers Energy
+  runs GBCMD on the UtilityAPI EE/DER Engagement Platform, and that platform is what pushes
+  events to a registered third party about Consumers Energy authorizations, meters, bills and
+  intervals. No AsyncAPI document is published by either party — this is a searched catalog of
+  the documented webhook surface, not a spec harvest.
+asyncapi_spec_published: false
+operator: >-
+  UtilityAPI, under licence to Consumers Energy. Consumers Energy's own Green Button host names
+  utilityapi.com as its API Documentation and its third-party dashboard.
+transport:
+  protocol: https
+  method: POST
+  content_type: application/json
+  opt_in: true
+  configuration: User Settings > Webhook Settings > "Create new webhook endpoint" (per-endpoint event selection)
+  test_trigger: A `ping` event can be sent manually per endpoint from settings.
+security:
+  signature:
+    header: X-UtilityAPI-Webhook-Signature
+    salt_header: X-UtilityAPI-Webhook-Salt
+    algorithm: SHA-256
+    scheme: SHA256("<endpoint_secret>.<salt>.<raw_body>")
+    note: The endpoint secret comes from the third party's own settings; the salt is per-request.
+delivery:
+  success_criteria: HTTP 200 OK from the receiver marks every event in the request is_delivered=true.
+  retry: Every hour for 72 hours on no response or any 4xx/5xx.
+  ordering: >-
+    NOT guaranteed. Retries mean a newer event can arrive before an older failed one — a consumer
+    must reconcile by event uid and ts, not by arrival order.
+  replay: >-
+    Missed events can be re-read from the /events endpoints, which return the same Event shape as
+    the push payload. Delivery status can also be marked manually to stop retries.
+envelope:
+  fields:
+    events: Array of Event objects.
+    next: Cursor for further events, or null.
+  event_fields: [uid, type, ts, delivery_method, delivery_target, is_delivered]
+extensibility: >-
+  The docs state new event types will be added, so consumers must handle unknown `type` values
+  gracefully.
+events:
+  - type: ping
+    group: Testing / Debugging
+    description: Manually triggered test notification.
+    attributes: []
+  - type: form_created
+    group: Form
+    description: A new Form was created.
+    attributes: [form_uid]
+  - type: authorization_created
+    group: Authorization
+    description: A customer (utility account holder) submitted a new Authorization.
+    attributes: [authorization_uid]
+  - type: authorization_declined
+    group: Authorization
+    description: A customer declined an Authorization.
+    attributes: [authorization_uid]
+  - type: authorization_renewed
+    group: Authorization
+    description: An existing Authorization was re-submitted or renewed, typically an expiry extension.
+    attributes: [authorization_uid]
+  - type: authorization_update_started
+    group: Authorization
+    description: Verification of an Authorization began, including refreshing its meter list.
+    attributes: [authorization_uid]
+  - type: authorization_update_delayed
+    group: Authorization
+    description: Waiting on the utility (meter list push) or the customer (2FA code).
+    attributes: [authorization_uid]
+  - type: authorization_update_retrying
+    group: Authorization
+    description: An error occurred and an automatic retry is imminent; the retrying note carries an ETA.
+    attributes: [authorization_uid]
+  - type: authorization_update_progress
+    group: Authorization
+    description: Significant progress on a multi-step authorization form, not yet complete.
+    attributes: [authorization_uid]
+  - type: authorization_update_finished_successful
+    group: Authorization
+    description: Update completed and status updated.
+    attributes: [authorization_uid]
+  - type: authorization_update_finished_errored
+    group: Authorization
+    description: Update completed but with utility-side collection errors; see the notes.
+    attributes: [authorization_uid]
+  - type: authorization_expiring_soon
+    group: Authorization
+    description: Within 24 hours of expiry.
+    attributes: [authorization_uid]
+  - type: authorization_expired
+    group: Authorization
+    description: >-
+      Expired. Access credentials are deleted and no further utility data can be collected; a
+      re-authorization form must be sent to the customer.
+    attributes: [authorization_uid]
+  - type: authorization_revoked
+    group: Authorization
+    description: >-
+      Revoked. ALL collected data (bills and intervals included) plus access credentials are
+      deleted; a new authorization form is required to regain access.
+    attributes: [authorization_uid]
+  - type: meter_created
+    group: Meter
+    description: A new Meter was found, usually while building the meter list or during historical collection.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_bills_added
+    group: Meter
+    description: New Bills found; check bill_count and bill_coverage.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_intervals_added
+    group: Meter
+    description: New Intervals found; check interval_count and interval_coverage.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_historical_collection_started
+    group: Meter
+    description: Historical data collection began for a Meter.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_historical_collection_delayed
+    group: Meter
+    description: Waiting on the utility or the customer.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_historical_collection_retrying
+    group: Meter
+    description: Error encountered; automatic retry imminent, ETA in the retrying note.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_historical_collection_progress
+    group: Meter
+    description: Fired once at the beginning of each collection.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_historical_collection_finished_successful
+    group: Meter
+    description: Historical collection completed and Meter status updated.
+    attributes: [authorization_uid, meter_uid]
+  - type: meter_historical_collection_finished_errored
+    group: Meter
+    description: Completed with utility-side errors; see the Meter notes.
+    attributes: [authorization_uid, meter_uid]
+event_count: 23
+greenbutton_notifications:
+  note: >-
+    Separately from webhooks, the Green Button standard's own notification flow delivers Bulk
+    feed links (GET /Bulk/{bulk_uid}, client_access_token) carrying new authorizations and
+    updated usage summaries / interval blocks. Bulk URLs expire after a few days.
+  source: https://utilityapi.com/docs/greenbutton/api

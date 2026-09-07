@@ -3,13 +3,13 @@ url: https://raw.githubusercontent.com/api-evangelist/cms-energy/refs/heads/main
 name: CMS Energy
 kind: company
 tags:
-  - Electric
-  - Energy
-  - Green Button
-  - Michigan
-  - Natural Gas
-  - Utility
-  - Fortune 500
+- Electric
+- Energy
+- Green Button
+- Michigan
+- Natural Gas
+- Utility
+- Fortune 500
 type: Index
 deliveryModel:
   model: unknown
@@ -38,15 +38,12 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cms-energy.png
 access: 3rd-Party
 created: '2026-03-21'
-modified: '2026-04-23'
+modified: '2026-09-06'
 specificationVersion: '0.23'
-description: >-
-  CMS Energy is an energy holding company whose primary subsidiary is Consumers
-  Energy, an electric and natural gas utility serving customers in Michigan.
-  Consumers Energy participates in the Green Button Connect My Data (GBCMD)
-  program, exposing customer-authorized energy usage data to third parties via
-  OAuth 2.0 - typically brokered through UtilityAPI - for use in energy
-  management, demand response, EV charging, solar, and sustainability
+description: CMS Energy is an energy holding company whose primary subsidiary is Consumers Energy, an electric and
+  natural gas utility serving customers in Michigan. Consumers Energy participates in the Green Button Connect My
+  Data (GBCMD) program, exposing customer-authorized energy usage data to third parties via OAuth 2.0 - typically
+  brokered through UtilityAPI - for use in energy management, demand response, EV charging, solar, and sustainability
   applications.
 apis:
 - aid: cms-energy:consumers-green-button-api
@@ -70,13 +67,11 @@ apis:
     type: Documentation
   - url: https://utilityapi.com/
     type: Portal
-  description: >-
-    The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas
-    usage data to registered third parties using the NAESB ESPI / Green Button standard. Authorization
-    uses OAuth 2.0 with single sign-on or test-account scopes; data is delivered as Green Button XML or
-    JSON via UtilityAPI's standardized endpoints (Meters, Bills, Intervals, Billing Summaries). Third
-    parties register with Consumers Energy, are issued a client_id, and start in sandbox mode before being
-    approved for live data.
+  description: The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas
+    usage data to registered third parties using the NAESB ESPI / Green Button standard. Authorization uses OAuth
+    2.0 with single sign-on or test-account scopes; data is delivered as Green Button XML or JSON via UtilityAPI's
+    standardized endpoints (Meters, Bills, Intervals, Billing Summaries). Third parties register with Consumers
+    Energy, are issued a client_id, and start in sandbox mode before being approved for live data.
   x-features:
   - name: Green Button Standard
     description: NAESB ESPI / Green Button XML for usage point and interval data.
@@ -101,6 +96,7 @@ apis:
     description: Inform solar sizing and EV-charging optimization with real usage.
   - name: Sustainability Reporting
     description: Aggregate usage into Scope 2 emissions and ESG reporting.
+  baseURL: https://utilityapi.com/api/v2
 - aid: cms-energy:cms-energy-authorizations-api
   name: CMS Energy Authorizations API
   description: The Authorizations API from CMS Energy — 2 operation(s) for authorizations.
@@ -110,6 +106,10 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cms-energy-authorizations-api-openapi.yml
+  - type: Overlay
+    url: overlays/cms-energy-authorizations-api-overlay.yaml
+  baseURL: https://utilityapi.com/api/v2
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cms-energy:cms-energy-bills-api
   name: CMS Energy Bills API
   description: The Bills API from CMS Energy — 1 operation(s) for bills.
@@ -119,6 +119,10 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cms-energy-bills-api-openapi.yml
+  - type: Overlay
+    url: overlays/cms-energy-bills-api-overlay.yaml
+  baseURL: https://utilityapi.com/api/v2
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cms-energy:cms-energy-greenbutton-api
   name: CMS Energy GreenButton API
   description: The GreenButton API from CMS Energy — 1 operation(s) for greenbutton.
@@ -130,6 +134,10 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cms-energy-greenbutton-api-openapi.yml
+  - type: Overlay
+    url: overlays/cms-energy-greenbutton-api-overlay.yaml
+  baseURL: https://utilityapi.com/DataCustodian/espi/1_1/resource
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cms-energy:cms-energy-intervals-api
   name: CMS Energy Intervals API
   description: The Intervals API from CMS Energy — 1 operation(s) for intervals.
@@ -139,6 +147,10 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cms-energy-intervals-api-openapi.yml
+  - type: Overlay
+    url: overlays/cms-energy-intervals-api-overlay.yaml
+  baseURL: https://utilityapi.com/api/v2
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cms-energy:cms-energy-meters-api
   name: CMS Energy Meters API
   description: The Meters API from CMS Energy — 2 operation(s) for meters.
@@ -148,38 +160,177 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/cms-energy-meters-api-openapi.yml
+  - type: Overlay
+    url: overlays/cms-energy-meters-api-overlay.yaml
+  baseURL: https://utilityapi.com/api/v2
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: cms-energy:cms-energy-outage-map-api
+  name: Consumers Energy Outage Map ArcGIS REST API
+  description: Consumers Energy publishes its outage map data as an anonymous Esri ArcGIS Server 11.5 REST Services
+    Directory on its own domain — no key, no account, no registration. CEOutageMap carries seven layers including
+    the electric service territory polygon and live outage jobs (JOB_ID, CUSTOMER_COUNT, CAUSE_CD, CAUSE_DESC, OUTAGE_TIME,
+    EST_TIME_RESTORATION, CREW_ASSIGNED); ServiceDashboard carries five county- and city-level rollups (CE_County_Outages,
+    CE_City_Outages, CustomersInterruptedPercent, NumberOfInterruptions, NumberOfWireDowns) over both a MapServer
+    and a FeatureServer. Every map service also publishes a WSDL 1.1 SOAP contract with 55 operations. This is the
+    only first-party, CMS-Energy-operated machine-readable API surface in the profile.
+  humanURL: https://www.consumersenergy.com/outagemap
+  baseURL: https://www.consumersenergy.com/arcgispublic/rest
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  tags:
+  - Outages
+  - Geospatial
+  - Open Data
+  - Electric
+  - Utility
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-outage-map-api-openapi.yml
+  - type: Overlay
+    url: overlays/cms-energy-outage-map-api-overlay.yaml
+  - type: WSDL
+    url: wsdl/cms-energy-ceoutagemap-mapserver.wsdl
+  - type: WSDL
+    url: wsdl/cms-energy-servicedashboard-mapserver.wsdl
+  - type: WSDL
+    url: wsdl/cms-energy-arcgis-catalog.wsdl
+  - type: Documentation
+    url: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+  x-features:
+  - name: Anonymous access
+    description: No API key, token or registration; verified by unauthenticated probe.
+  - name: ArcGIS REST query
+    description: where / outFields / returnGeometry / returnCountOnly against every layer.
+  - name: SOAP contracts
+    description: WSDL 1.1, 55 operations per map service, saved verbatim under wsdl/.
+  - name: GeoJSON and PBF
+    description: supportedQueryFormats JSON, geoJSON, PBF.
+  x-useCases:
+  - name: Outage monitoring
+    description: Track Michigan county and city outage counts and restoration estimates.
+  - name: Grid reliability analysis
+    description: Interruption counts and wire-downs by area over time.
+  - name: Service territory mapping
+    description: Retrieve the Consumers Energy electric service territory polygon.
 common:
-  - type: AgenticAccess
-    url: agentic-access/cms-energy-agentic-access.yml
-  - type: DomainSecurity
-    url: security/cms-energy-domain-security.yml
-  - type: Authentication
-    url: authentication/cms-energy-authentication.yml
-  - type: OAuthScopes
-    url: scopes/cms-energy-scopes.yml
-  - url: https://www.cmsenergy.com
-    type: Website
-  - url: https://www.consumersenergy.com
-    name: Consumers Energy
-    type: Website
-  - url: https://utilityapi.com/docs/utilities/consumersenergy
-    name: Consumers Energy on UtilityAPI
-    type: Documentation
-  - url: https://www.cmsenergy.com/about-cms-energy/consumers-energy/
-    name: About Consumers Energy
-    type: About
-  - url: https://www.cmsenergy.com/contact-us/default.aspx
-    name: Contact Us
-    type: Support
-  - url: https://www.cmsenergy.com/privacy-statement/default.aspx
-    name: Privacy Statement
-    type: PrivacyPolicy
-  - url: https://twitter.com/CMSEnergy
-    name: CMS Energy on X
-    type: X
-  - url: https://www.linkedin.com/company/cms-energy/
-    name: CMS Energy on LinkedIn
-    type: LinkedIn
+- type: AgenticAccess
+  url: agentic-access/cms-energy-agentic-access.yml
+- type: DomainSecurity
+  url: security/cms-energy-domain-security.yml
+- type: Authentication
+  url: authentication/cms-energy-authentication.yml
+- type: OAuthScopes
+  url: scopes/cms-energy-scopes.yml
+- url: https://www.cmsenergy.com
+  type: Website
+- url: https://www.consumersenergy.com
+  name: Consumers Energy
+  type: Website
+- url: https://utilityapi.com/docs/utilities/consumersenergy
+  name: Consumers Energy on UtilityAPI
+  type: Documentation
+- url: https://www.cmsenergy.com/about-cms-energy/consumers-energy/
+  name: About Consumers Energy
+  type: About
+- url: https://www.cmsenergy.com/contact-us/default.aspx
+  name: Contact Us
+  type: Support
+- url: https://www.cmsenergy.com/privacy-statement/default.aspx
+  name: Privacy Statement
+  type: PrivacyPolicy
+- url: https://twitter.com/CMSEnergy
+  name: CMS Energy on X
+  type: X
+- url: https://www.linkedin.com/company/cms-energy/
+  name: CMS Energy on LinkedIn
+  type: LinkedIn
+- type: WellKnown
+  url: well-known/cms-energy-well-known.yml
+- type: SecurityTxt
+  url: well-known/cms-energy-security.txt
+- type: VulnerabilityDisclosure
+  url: security/cms-energy-vulnerability-disclosure.yml
+- type: Security
+  url: security/cms-energy-vulnerability-disclosure.yml
+- type: Conformance
+  url: conformance/cms-energy-conformance.yml
+- type: Compliance
+  url: conformance/cms-energy-conformance.yml
+- type: ErrorCatalog
+  url: errors/cms-energy-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/cms-energy-lifecycle.yml
+- type: Conventions
+  url: conventions/cms-energy-conventions.yml
+- type: Sandbox
+  url: sandbox/cms-energy-sandbox.yml
+- type: DataModel
+  url: data-model/cms-energy-data-model.yml
+- type: Packages
+  url: packages/cms-energy-packages.yml
+- type: MCPServer
+  url: mcp/cms-energy-mcp.yml
+- type: Webhooks
+  url: asyncapi/cms-energy-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/cms-energy-llms.txt
+- type: RateLimits
+  url: rate-limits/cms-energy-rate-limits.yml
+- type: Plans
+  url: plans/cms-energy-plans-pricing.yml
+- type: FinOps
+  url: finops/cms-energy-finops.yml
+- type: DeveloperPortal
+  url: https://greenbutton.consumersenergy.com/
+  name: Consumers Energy Green Button Connect
+- type: APIReference
+  url: https://utilityapi.com/docs/api
+  name: Green Button program API reference
+- type: GettingStarted
+  url: https://utilityapi.com/docs/quickstart
+  name: Quickstart
+- type: SignUp
+  url: https://greenbutton.consumersenergy.com/third-party/register
+  name: Third Party Registration
+- type: TermsOfService
+  url: https://greenbutton.consumersenergy.com/third-party/terms
+  name: Third Party Agreement
+- type: PrivacyPolicy
+  url: https://www.consumersenergy.com/privacy
+  name: Consumers Energy Privacy Policy
+- type: Support
+  url: https://www.consumersenergy.com/contact-us
+  name: Consumers Energy Contact Us
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-06'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v3
+x-spec-provenance:
+  checked: '2026-09-06'
+  note: 'The five Green Button specs in openapi/ derive from openapi/_original/cms-energy-openapi.yml, which describes
+    itself in info.description as a "Best-effort OpenAPI 3.1 description" — it was authored from the provider documentation,
+    not fetched from the provider. It is NOT a harvested contract, despite living under openapi/_original/, and
+    provenance.yml therefore records it as "harvested" incorrectly. Its operations match the documented endpoint
+    surface, but at least one field is demonstrably invented: securitySchemes.oauth2 carries tokenUrl https://utilityapi.com/api/v2/oauth/token,
+    which returns HTTP 404 (the real token endpoint is the per-utility https://utilityapi.com/DataCustodian/{utility}/oauth/token).
+    Flagged, not deleted; a scaffold sweep owns the remediation.'
+  ownership: 'The Green Button surface is served on utilityapi.com, not a CMS Energy domain. That is legitimate
+    and documented: Consumers Energy runs its Green Button Connect My Data program on UtilityAPI''s EE/DER Engagement
+    Platform and, from its own host https://greenbutton.consumersenergy.com/, links utilityapi.com/docs/utilities/consumersenergy
+    as its "API Documentation" and utilityapi.com/dashboard?utility_branding=CONSUMERSENERGY as its third-party
+    dashboard. The operator is the vendor; the program is Consumers Energy''s. The ArcGIS outage API is by contrast
+    fully first-party, served from www.consumersenergy.com.'
+  evidence:
+  - url: https://greenbutton.consumersenergy.com/
+    status: 200
+  - url: https://utilityapi.com/api/v2/oauth/token
+    status: 404
+  - url: https://utilityapi.com/DataCustodian/espi/1_1/resource/ReadServiceStatus
+    status: 401
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+    status: 200

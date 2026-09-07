@@ -1,0 +1,45 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Consumers Energy Outage Map ArcGIS REST API
+  version: 1.0.0
+extends: cms-energy-outage-map-api-openapi.yml
+x-provenance:
+  generated: '2026-09-06'
+  method: generated
+  source: openapi/cms-energy-outage-map-api-openapi.yml
+  note: Captures API Evangelist additions only. The underlying OpenAPI is never mutated.
+actions:
+- target: $.info
+  description: Attach API Evangelist provenance and operator attribution.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/cms-energy
+      repository: https://github.com/api-evangelist/cms-energy
+      note: Third-party profile. Not published or endorsed by CMS Energy.
+    x-operator: Consumers Energy (CMS Energy) — first party, served from www.consumersenergy.com.
+- target: $
+  description: Link the derived and searched artifacts that describe runtime behaviour this spec does
+    not carry.
+  update:
+    x-artifacts:
+      conventions: conventions/cms-energy-conventions.yml
+      errors: errors/cms-energy-problem-types.yml
+      rateLimits: rate-limits/cms-energy-rate-limits.yml
+      lifecycle: lifecycle/cms-energy-lifecycle.yml
+      authentication: authentication/cms-energy-authentication.yml
+      conformance: conformance/cms-energy-conformance.yml
+      dataModel: data-model/cms-energy-data-model.yml
+      agenticAccess: agentic-access/cms-energy-agentic-access.yml
+- target: $
+  description: Record the SOAP sibling contracts published by the same ArcGIS host.
+  update:
+    x-soap-contracts:
+    - wsdl/cms-energy-ceoutagemap-mapserver.wsdl
+    - wsdl/cms-energy-servicedashboard-mapserver.wsdl
+    - wsdl/cms-energy-arcgis-catalog.wsdl
+- target: $.paths..get
+  description: This surface is anonymous; record that no security scheme applies, and that an error body
+    can arrive under HTTP 200.
+  update:
+    x-auth: none
+    x-error-envelope: arcgis (see errors/cms-energy-problem-types.yml); may be returned with HTTP 200.

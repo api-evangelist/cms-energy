@@ -1,0 +1,128 @@
+generated: '2026-09-06'
+method: probed
+source: live GET probes of /.well-known/* on every host this record knows
+description: >-
+  Well-known document probe for CMS Energy. Five named paths were requested on each host the
+  record knows: the registrable domains and www hosts for cmsenergy.com and consumersenergy.com,
+  the Green Button third-party portal host, and utilityapi.com (the platform host named in
+  apis.yml baseURL and in every OpenAPI servers[] block). ONE real document was served:
+  an RFC 9116 security.txt on www.consumersenergy.com.
+notes:
+  - >-
+    www.cmsenergy.com answers HTTP 200 with an 11-byte body reading "Invalid key" for EVERY
+    /.well-known/* path, including paths that cannot exist. That is an edge catch-all, not a
+    document; each such probe is recorded with served_document: false and none of them earns a
+    pointer.
+  - >-
+    The security.txt Contact is a CMS Energy corporate mailbox
+    (Vulnerability_Management@cmsenergy.com) and its Canonical is the consumersenergy.com URL,
+    so the document covers the whole CMS Energy estate even though it is served from only the
+    utility host.
+hosts:
+  - host: www.consumersenergy.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        served_document: true
+        file: cms-energy-security.txt
+      - path: /.well-known/openid-configuration
+        status: 404
+        served_document: false
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        served_document: false
+      - path: /.well-known/api-catalog
+        status: 404
+        served_document: false
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        served_document: false
+  - host: consumersenergy.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        served_document: true
+        file: cms-energy-security.txt
+        note: 301 to the www host; same document.
+  - host: www.cmsenergy.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/html
+        served_document: false
+        note: Catch-all body "Invalid key" (11 bytes), not a security.txt.
+      - path: /.well-known/openid-configuration
+        status: 200
+        content_type: text/html
+        served_document: false
+        note: Same catch-all body.
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        content_type: text/html
+        served_document: false
+        note: Same catch-all body.
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: text/html
+        served_document: false
+        note: Same catch-all body.
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        content_type: text/html
+        served_document: false
+        note: Same catch-all body.
+  - host: cmsenergy.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 0
+        served_document: false
+        note: Apex does not answer; connection failed. Only the www host resolves.
+  - host: greenbutton.consumersenergy.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        served_document: false
+      - path: /.well-known/openid-configuration
+        status: 404
+        served_document: false
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        served_document: false
+      - path: /.well-known/api-catalog
+        status: 404
+        served_document: false
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        served_document: false
+  - host: utilityapi.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        served_document: false
+      - path: /.well-known/openid-configuration
+        status: 404
+        served_document: false
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        served_document: false
+      - path: /.well-known/api-catalog
+        status: 404
+        served_document: false
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        served_document: false
+  - host: www.consumersenergy.com/arcgispublic
+    documents:
+      - path: /arcgispublic/.well-known/security.txt
+        status: 404
+        served_document: false
+        note: Probed on the ArcGIS application root as well; nothing served there.
+agent_card:
+  probed: true
+  result: none
+  note: >-
+    /.well-known/agent-card.json and /.well-known/agent.json were probed on every host above.
+    404 everywhere except www.cmsenergy.com, whose 200 is the same 11-byte "Invalid key"
+    catch-all and is NOT an AgentCard. No a2a/ artifact was written.

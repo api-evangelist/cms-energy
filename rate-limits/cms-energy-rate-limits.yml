@@ -4,50 +4,89 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: CMS Energy
 providerId: cms-energy
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-09-06'
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/availability
+reconciled: true
 tags:
   - Electric
   - Energy
   - Green Button
   - Utility
   - Rate Limiting
-notes: CMS Energy / Consumers Energy does not publish numeric rate limits for Green Button Connect; the
-  NAESB ESPI specification governs polling frequency (typically once per day for residential interval data).
-  Other partner integrations are governed bilaterally.
-description: 'Rate limits for CMS Energy customer-data sharing follow the NAESB ESPI / Green Button Connect
-  conventions: data-custodian polling once per billing-period or once per day for interval data, with reauthorization
-  required when consents expire. Specific numeric ceilings are not publicly documented.'
+description: >-
+  Published rate limits for the CMS Energy / Consumers Energy API surface. The Green Button
+  Connect My Data program publishes real, numeric guidance and a documented exhaustion signal;
+  the first-party ArcGIS outage services publish a per-response record cap but no request rate.
+notes: >-
+  Supersedes the 2026-05-04 bulk-sweep placeholder, which recorded that no numeric limits were
+  published. They are published — on the platform's availability page, which the Consumers
+  Energy Green Button host links to as its API Documentation.
 sources:
-  - https://www.greenbuttondata.org/
-  - https://www.consumersenergy.com
+  - https://utilityapi.com/docs/availability
+  - https://utilityapi.com/docs/greenbutton/api
+  - https://www.consumersenergy.com/arcgispublic/rest/services/CEOutageMap/MapServer?f=json
 responseCodes:
   throttled: 429
   serviceUnavailable: 503
+  asyncDeferred: 202
+headers:
+  request: []
+  response:
+    - name: Retry-After
+      applies_to: [429, 202]
+      detail: >-
+        Carries the wait before retrying. On a 202 it says how long to wait while the payload is
+        cached asynchronously.
+      source: https://utilityapi.com/docs/greenbutton/api
+  budget_headers_published: false
+  budget_note: >-
+    No RateLimit-* or X-RateLimit-* headers are documented, so an agent cannot see remaining
+    budget — only that it has been exhausted.
 limits:
-  - name: Green Button Connect polling
-    scope: third-party-application
-    metric: requests_per_day
-    limit: see NAESB ESPI / Green Button Connect implementation
-    notes: Typical Green Button Connect implementations expect third parties to poll once per day per authorized
-      customer. CMS-specific ceiling is not publicly documented.
-  - name: Partner-contract defined
-    scope: account
-    metric: varies
-    limit: see partner agreement
-    notes: Limits are negotiated as part of each partner integration agreement.
-policies:
-  - name: NAESB ESPI compliance
-    description: Green Button Connect access follows the NAESB ESPI specification. Third parties authenticate
-      via OAuth 2.0 and refresh tokens as required by ESPI.
-  - name: Backoff strategy
-    description: On 429 responses, honor any Retry-After header and back off with jitter before retrying.
-  - name: Bilateral contract
-    description: Specific limits, retry policy, and SLAs for non-Green-Button integrations are governed
-      by the partner integration contract.
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+  - id: bill-and-interval-downloads
+    scope: per-account
+    surface: Consumers Energy GBCMD JSON API (https://utilityapi.com/api/v2)
+    operations: [listBills, listIntervals, bill downloads, interval downloads]
+    window: 1 minute
+    limit: 1
+    unit: requests
+    enforcement: soft
+    detail: >-
+      "please try to not GET request bill and interval downloads more than 1/per minute" —
+      published as a rule of thumb, enforced by throttling when abused rather than as a hard quota.
+    source: https://utilityapi.com/docs/availability
+  - id: all-other-requests
+    scope: per-account
+    surface: Consumers Energy GBCMD JSON API (https://utilityapi.com/api/v2)
+    operations: [all other GET and POST]
+    window: 1 second
+    limit: 1
+    unit: requests
+    enforcement: soft
+    detail: '"all other GET and POST requests 1/per second".'
+    source: https://utilityapi.com/docs/availability
+  - id: arcgis-max-record-count
+    scope: per-request
+    surface: Consumers Energy ArcGIS REST services (https://www.consumersenergy.com/arcgispublic/rest)
+    window: per response
+    limit: 1000
+    unit: features
+    enforcement: hard
+    detail: >-
+      maxRecordCount 1000 on both CEOutageMap/MapServer and ServiceDashboard/MapServer|FeatureServer.
+      A per-response cap, not a request rate; page with resultRecordCount / resultOffset.
+    source: https://www.consumersenergy.com/arcgispublic/rest/services/CEOutageMap/MapServer?f=json
+  - id: arcgis-request-rate
+    scope: per-client
+    surface: Consumers Energy ArcGIS REST services
+    window: null
+    limit: null
+    unit: null
+    enforcement: undocumented
+    detail: >-
+      No request rate limit is published for the anonymous ArcGIS surface. robots.txt disallows
+      /arcgispublic/* to crawlers, which is a crawl directive rather than a rate limit.
+    source: https://www.consumersenergy.com/robots.txt
+limit_count: 3

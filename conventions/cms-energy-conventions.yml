@@ -1,0 +1,134 @@
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/formats
+description: >-
+  Cross-cutting runtime semantics an agent needs before calling the CMS Energy surfaces. Two
+  surfaces with different conventions: the Consumers Energy Green Button / GBCMD data API
+  (utilityapi.com, the platform Consumers Energy licenses for its program) and the first-party
+  Consumers Energy ArcGIS outage services (www.consumersenergy.com/arcgispublic).
+authentication:
+  style: bearer-token
+  detail: >-
+    The JSON API takes an API token either as the access_token query parameter or as
+    Authorization: Bearer. The Green Button REST API takes one of three ESPI token classes in the
+    same Bearer header. The ArcGIS surface is anonymous for read; its token service exists at
+    /arcgispublic/tokens/ with a 60-minute short-lived token validity but was not exercised.
+  source: https://utilityapi.com/docs/authentication
+  see_also: authentication/cms-energy-authentication.yml
+idempotency:
+  supported: false
+  coverage: none
+  header: null
+  scope: []
+  retention: null
+  detail: >-
+    No Idempotency-Key header, request-id de-duplication, or documented replay window exists on
+    any documented write. The mutating surface is small — form create/modify/delete, meter
+    modify, historical-collection trigger, authorization modify/delete/revoke, event modify — and
+    none of it documents replay protection. An agent that retries a POST after a timeout has no
+    guarantee it will not act twice.
+  source: https://utilityapi.com/docs/api
+reversibility:
+  grade: documented
+  detail: >-
+    The consequential write on this surface is the customer data authorization, and it has a real,
+    documented reversal path — but no stated window, so this grades `documented`, not `verified`.
+  operations:
+    - write: Customer grants a data-sharing authorization (Green Button OAuth authorization code grant)
+      reversal: Revoke the authorization
+      rest:
+        - DELETE /authorizations/{id} (JSON API, operationId deleteAuthorization)
+        - DELETE /Authorization/{auth_uid} (Green Button REST API)
+      self_service_ui: https://greenbutton.consumersenergy.com/my-authorizations
+      window_stated: false
+      window: >-
+        "You can see and revoke any of your authorizations for data sharing at any time" — no
+        deadline, but also no stated retention or deletion obligation on the third party. The
+        provider states plainly that revocation only stops FUTURE access: data already downloaded
+        before revocation is not recalled, and the customer must contact the third party directly
+        to have it deleted.
+      source: https://greenbutton.consumersenergy.com/auth-help
+    - write: Authorization expires on its own
+      reversal: Not applicable — expiry is the terminal state; the customer must re-authorize.
+      window_stated: true
+      window: The expiration date chosen at authorization time.
+      source: https://greenbutton.consumersenergy.com/auth-help
+    - write: ArcGIS FeatureServer editing (Create/Update/Delete/Uploads advertised on ServiceDashboard/FeatureServer)
+      reversal: unknown
+      window_stated: false
+      note: >-
+        The capability string advertises editing, but no editing operation was probed and no
+        rollback, versioning or archive is offered (hasVersionedData false, hasArchivedData
+        false). Treat as not publicly writable.
+      source: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/FeatureServer?f=json
+dry_run_mode:
+  supported: partial
+  detail: >-
+    There is no dry-run flag, but there is a full sandbox: a third party registering with
+    Consumers Energy starts in sandbox mode and can only reach test accounts until Consumers
+    Energy moves them to live. The Forms API also exposes an explicit test-submit operation.
+    See sandbox/cms-energy-sandbox.yml.
+  source: https://utilityapi.com/docs/utilities/consumersenergy
+pagination:
+  style: cursor
+  detail: >-
+    JSON API payloads carry a `next` member (null when there are no further pages), documented in
+    the webhook/event payload shape. The ArcGIS surface pages instead with resultRecordCount /
+    resultOffset against a hard maxRecordCount of 1000 per response.
+  response_fields: [next]
+  arcgis_params: [resultRecordCount, resultOffset]
+  source: https://utilityapi.com/docs/webhooks
+filtering:
+  detail: >-
+    JSON API list endpoints filter by uid list, e.g. /intervals?meters=NNN and /bills?meters=NNN.
+    ArcGIS layers filter with a SQL-ish `where` plus `outFields` projection.
+  source: https://utilityapi.com/docs/authentication
+versioning:
+  detail: Path-segment versioning (api/v2, espi/1_1). See lifecycle/cms-energy-lifecycle.yml.
+timestamps:
+  format: ISO 8601
+  default_timezone: UTC (+00:00)
+  exception: >-
+    Timestamps parsed from utility bills and intervals carry the utility's LOCAL timezone
+    deliberately, so an agent must not assume UTC on interval data.
+  request_format: >-
+    ISO 8601 with a literal "T" separator; 24-hour clock; microsecond precision permitted.
+    "2014-01-01 01:01:01+00:00" and "2014-01-01T01:01:01PM" are documented as invalid.
+  source: https://utilityapi.com/docs/formats
+encoding:
+  charset: UTF-8
+  json_media_type: application/json
+  greenbutton_media_type: application/atom+xml
+  source: https://utilityapi.com/docs/formats
+identifiers:
+  uid_strings:
+    detail: >-
+      Object identifiers are UID strings assigned by the platform, not by the utility. They may
+      look like integers but must be treated as opaque strings.
+    source: https://utilityapi.com/docs/formats
+  persistent_uuids:
+    detail: >-
+      The Green Button API additionally supports persistent UUIDs for resources so a consumer can
+      ingest only new data across authorizations.
+    source: https://utilityapi.com/docs/greenbutton/api
+request_tracing:
+  supported: false
+  detail: No request-id or correlation-id response header is documented.
+error_envelope:
+  detail: Two envelopes, neither RFC 9457. See errors/cms-energy-problem-types.yml.
+rate_limit_signalling:
+  status: 429
+  headers: [Retry-After]
+  detail: >-
+    429 carries Retry-After. No RateLimit-* or X-RateLimit-* budget headers are documented, so an
+    agent cannot see how much budget it has left before it exhausts it — only that it has.
+  see_also: rate-limits/cms-energy-rate-limits.yml
+success_envelope:
+  detail: >-
+    Endpoints that do not return an object return {"success": true}, optionally with extra
+    informational attributes.
+  source: https://utilityapi.com/docs/formats
+webhooks:
+  detail: >-
+    Optional, opt-in push delivery with HMAC signature verification. See
+    asyncapi/cms-energy-webhooks.yml.

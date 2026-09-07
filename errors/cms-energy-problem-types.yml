@@ -1,0 +1,138 @@
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/formats
+description: >-
+  Error catalog for the CMS Energy API surface. TWO different error envelopes are in play and an
+  agent must branch on which surface it called; neither is RFC 9457 application/problem+json.
+format: vendor-json
+rfc9457: false
+envelopes:
+  - id: utilityapi-json
+    applies_to:
+      - https://utilityapi.com/api/v2 (Consumers Energy GBCMD JSON API)
+    media_type: application/json
+    source: https://utilityapi.com/docs/formats
+    fields:
+      - name: error
+        description: The specific error type (a stable machine slug).
+      - name: error_description
+        description: Human-readable description of what was wrong.
+      - name: url
+        description: Link to the relevant docs page, or null.
+    note: >-
+      Additional informational attributes may appear. The docs warn that new error types will be
+      added over time, so consumers must handle unknown values.
+    examples:
+      - error: invalid_param
+        error_description: Scope must be a valid json object
+        url: https://utilityapi.com/docs/authorization-forms/scopes
+      - error: not_found
+        error_description: No meters or authorizations found matching the given filter parameters.
+        url: https://utilityapi.com/docs/api/intervals/list#param
+      - error: not_found
+        error_description: Resource not found
+        status_code: 404
+        note: Observed live on GET https://utilityapi.com/api/v2 (probed 2026-09-06).
+  - id: arcgis
+    applies_to:
+      - https://www.consumersenergy.com/arcgispublic/rest (Consumers Energy outage services)
+    media_type: application/json
+    source: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer/99?f=json
+    fields:
+      - name: error.code
+        description: Numeric code, mirrors the HTTP status.
+      - name: error.message
+        description: Short message.
+      - name: error.details
+        description: Array of detail strings, frequently empty.
+    examples:
+      - error:
+          code: 404
+          message: Layer not found
+          details: []
+        note: Observed live 2026-09-06.
+    note: >-
+      ArcGIS Server returns HTTP 200 with an error body for several failure classes, so the
+      status code alone is not a reliable success signal on this surface — parse the body.
+problem_types:
+  - id: invalid_param
+    envelope: utilityapi-json
+    http_status: 400
+    title: Invalid query parameter
+    detail: One of the query parameters was invalid; check error_description for which.
+    remediation: Correct the named parameter and retry. Safe to retry after correction.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: unauthorized
+    envelope: utilityapi-json
+    http_status: 401
+    title: Invalid, expired, or missing access token
+    detail: >-
+      The Green Button API distinguishes three token classes; a 401 means the token is absent,
+      expired or not a token at all.
+    remediation: >-
+      Re-issue the right token class — registration_access_token for Registration endpoints,
+      client_access_token for Authorization/Bulk endpoints, access_token for Resource/Batch
+      endpoints — and retry.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: forbidden_token_class
+    envelope: utilityapi-json
+    http_status: 403
+    title: Wrong access-token type for this endpoint
+    detail: The token presented is valid but is not the class this endpoint accepts.
+    remediation: Swap to the correct token class for the endpoint family. Do not retry unchanged.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: not_found
+    envelope: utilityapi-json
+    http_status: 404
+    title: Endpoint does not exist, or is not visible to you
+    detail: >-
+      404 is deliberately overloaded — it also covers resources you lack permission to see, so it
+      cannot be read as proof of non-existence.
+    remediation: Verify the uid and that the authorization covers the resource.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: rate_limited
+    envelope: none
+    http_status: 429
+    title: Rate limited
+    detail: >-
+      No response format is guaranteed on a 429 — it may be HTML, JSON or empty. The
+      Retry-After response header carries the wait.
+    remediation: Honour Retry-After and back off. See rate-limits/cms-energy-rate-limits.yml.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: server_error
+    envelope: none
+    http_status: 500
+    title: Internal server error
+    detail: Logged by the operator. No guaranteed response format.
+    remediation: Retry with backoff; if persistent, contact support.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: maintenance
+    envelope: none
+    http_status: 503
+    title: Down for maintenance
+    detail: No guaranteed response format.
+    remediation: Retry later.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: build_timeout
+    envelope: none
+    http_status: 504
+    title: Request timed out while being built
+    detail: The request was accepted but the payload could not be assembled in time.
+    remediation: Retry later. No guaranteed response format.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: async_pending
+    envelope: none
+    http_status: 202
+    title: Request too large to answer synchronously
+    detail: >-
+      Not an error, but it must be handled like one — the body is empty and the payload is being
+      cached asynchronously.
+    remediation: Wait the interval given in the Retry-After header, then re-request.
+    source: https://utilityapi.com/docs/greenbutton/api
+  - id: arcgis_layer_not_found
+    envelope: arcgis
+    http_status: 404
+    title: Layer not found
+    detail: The requested ArcGIS layer id does not exist on that service.
+    remediation: List the service with ?f=json and use a published layer id.
+    source: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer?f=json

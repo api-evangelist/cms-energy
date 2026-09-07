@@ -17,6 +17,13 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
+  "notes": [
+    "cms-energy-authorizations-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cms-energy-bills-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cms-energy-greenbutton-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cms-energy-intervals-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cms-energy-meters-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
   "skipped": []
 }

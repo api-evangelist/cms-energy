@@ -1,0 +1,59 @@
+generated: '2026-09-06'
+method: searched
+source: >-
+  npm registry search, PyPI, github.com/utilityapi, and the Consumers Energy Green Button and
+  platform documentation
+description: >-
+  Client-library search for the CMS Energy / Consumers Energy API surface. NO first-party SDK
+  exists. Neither CMS Energy nor Consumers Energy publishes a client library in any registry, and
+  the platform that operates the Green Button Connect My Data program for them publishes none
+  either — its GitHub organization (github.com/utilityapi, HTTP 200) has zero public
+  repositories. Every package below is community-written and is recorded as such.
+official_sdk_count: 0
+registries_searched:
+  - registry: npm
+    queries: [utilityapi, utility-api, greenbutton, green-button, espi]
+    first_party_hits: 0
+  - registry: PyPI
+    queries: [utilityapi, greenbutton]
+    result: >-
+      404 for both. `utility-api` exists on PyPI (HTTP 200) but is an unrelated generic helper
+      package, not a client for this API.
+    first_party_hits: 0
+  - registry: GitHub
+    org: https://github.com/utilityapi
+    result: Organization exists, 0 public repositories.
+    first_party_hits: 0
+  - registry: pkg.go.dev / crates.io / NuGet / Maven Central / RubyGems / Packagist
+    result: Not searched individually — no SDK is referenced anywhere in the provider docs to search for.
+    first_party_hits: 0
+packages:
+  - name: '@cityssm/green-button-subscriber'
+    registry: npm
+    url: https://www.npmjs.com/package/@cityssm/green-button-subscriber
+    official: false
+    author: City of Sault Ste. Marie (third party, unaffiliated)
+    language: JavaScript/TypeScript
+    covers: Green Button Connect My Data subscriber flow (ESPI), generic across data custodians.
+    version: 0.5.0
+    published: '2023-10-05'
+    version_source: https://registry.npmjs.org/@cityssm/green-button-subscriber
+    note: >-
+      Not a Consumers Energy client. Listed because it is the only maintained npm package that
+      implements the GBCMD/ESPI subscriber side an integrator would otherwise write by hand.
+  - name: '@cityssm/green-button-parser'
+    registry: npm
+    url: https://www.npmjs.com/package/@cityssm/green-button-parser
+    official: false
+    author: City of Sault Ste. Marie (third party, unaffiliated)
+    language: JavaScript/TypeScript
+    covers: Parsing Green Button ESPI Atom XML payloads.
+    version: 1.0.1
+    published: '2025-10-14'
+    version_source: https://registry.npmjs.org/-/v1/search?text=green-button
+finding: >-
+  A first-party SDK whose release date lags the API is the strongest abandonment signal this
+  pipeline collects. Here there is no first-party SDK at all, which is a different and more
+  basic gap: an integrator building against the Consumers Energy Green Button program writes
+  their own HTTP and their own ESPI Atom XML parsing, or adopts an unaffiliated community
+  library last published in 2023.

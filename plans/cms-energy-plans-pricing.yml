@@ -4,11 +4,11 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: CMS Energy
 providerId: cms-energy
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-09-06'
+generated: '2026-09-06'
+method: searched
+source: https://greenbutton.consumersenergy.com/
+reconciled: true
 tags:
   - Electric
   - Energy
@@ -16,57 +16,67 @@ tags:
   - Utility
   - Green Button
   - Michigan
-notes: CMS Energy operates Consumers Energy, a regulated electric and natural-gas utility in Michigan.
-  The utility supports Green Button Connect (customer-authorized energy data sharing under the NAESB ESPI
-  / Green Button Connect standard) at no charge to customers, but does not publish a public commercial
-  API price list. Tariffs and demand-response programs are governed by Michigan Public Service Commission
-  (MPSC) filings. The plans below preserve the API Commons structure without fabricating numbers.
-description: CMS Energy / Consumers Energy provides Green Button Connect for customer-authorized energy
-  data sharing at no charge. Other partner integrations (demand response, EDI, settlement) are governed
-  by MPSC-filed tariffs or bilateral agreements rather than a public API price list.
+description: >-
+  CMS Energy publishes NO API price list, and that is the finding rather than a gap in the search.
+  Both public API surfaces are free at the point of use, for different reasons: the Consumers
+  Energy ArcGIS outage services are anonymous public geodata with no account of any kind, and the
+  Green Button Connect My Data program is described by Consumers Energy as "provided as a courtesy
+  to Consumers Energy customers". Access to GBCMD is gated by registration and utility review, not
+  by payment.
+notes: >-
+  Supersedes the 2026-05-04 bulk-sweep placeholder. Verified 2026-09-06: no pricing page, no fee
+  schedule, and no charge language anywhere in the Consumers Energy Third Party Agreement at
+  https://greenbutton.consumersenergy.com/third-party/terms (searched for fee / charge / cost —
+  the only hits are indemnity boilerplate). The platform Consumers Energy licenses publishes its
+  own pricing at https://utilityapi.com/pricing, but that is a price CMS Energy pays its vendor,
+  not one a developer pays CMS Energy, so it is not recorded as a CMS Energy plan.
 sources:
-  - https://www.consumersenergy.com
-  - https://www.greenbuttondata.org/
+  - url: https://greenbutton.consumersenergy.com/
+    status: 200
+  - url: https://greenbutton.consumersenergy.com/third-party/terms
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+    status: 200
 plans:
+  - id: cms-energy-arcgis-public
+    name: Consumers Energy public outage services
+    type: free
+    price: '0.00'
+    currency: USD
+    billing_period: none
+    onboarding: none
+    description: >-
+      Anonymous ArcGIS REST and SOAP access to outage and service-territory geodata. No account,
+      no key, no registration. Verified by an unauthenticated probe returning real data.
+    limits:
+      - maxRecordCount 1000 features per response
+      - No published request-rate limit; robots.txt disallows crawling /arcgispublic/*
+    elements:
+      - name: CEOutageMap MapServer (7 layers)
+      - name: ServiceDashboard MapServer and FeatureServer (5 layers)
+      - name: WSDL 1.1 SOAP contracts (55 operations per map service)
   - id: cms-energy-green-button-connect
-    name: Green Button Connect
-    type: freemium
-    description: Customer-authorized energy data sharing under the NAESB ESPI / Green Button Connect specification.
-      No charge to the customer or to authorized third-party recipients of the customer's data.
-    entries:
-      - label: Customer-authorized data access
-        name: gbc_data_access
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: US
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
+    name: Green Button Connect My Data — third party
+    type: free
+    price: '0.00'
+    currency: USD
+    billing_period: none
+    onboarding: registration + utility review (not self-serve)
+    description: >-
+      Customer-authorized energy data sharing under NAESB ESPI / Green Button Connect My Data. No
+      charge to the customer or to the authorized third party is stated anywhere; the gate is
+      Consumers Energy's approval of the third-party registration, which moves the third party out
+      of sandbox mode.
+    quota:
+      requests: unmetered — no quota is published
+    limits:
+      - Bill and interval downloads at most once per minute
+      - All other GET and POST at most once per second
     elements:
-      - name: NAESB ESPI / Green Button Connect compliance
-      - name: OAuth-authorized third-party access
-      - name: Customer self-service
-  - id: cms-energy-partner
-    name: Partner Integration
-    type: enterprise
-    description: Custom-negotiated partner integration (demand response, EDI, settlement). Governed by
-      MPSC-filed tariffs or bilateral agreements.
-    entries:
-      - label: Partner Integration
-        name: partner_integration
-        type: subscription
-        metric: month
-        limit: -1
-        timeFrame: month
-        geo: US
-        unit: 1
-        price: see MPSC tariff or partner agreement
-        userMultiplied: false
-    elements:
-      - name: Custom partner integration
-      - name: MPSC tariff alignment
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+      - name: NAESB ESPI / Green Button Connect My Data compliance
+      - name: Green Button OAuth 2.0 customer authorization
+      - name: Sandbox test scenarios before live approval
+      - name: Opt-in webhooks
+plan_count: 2
+enterprise_only: false
+public_price_list: false

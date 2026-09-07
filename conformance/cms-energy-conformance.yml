@@ -1,0 +1,138 @@
+generated: '2026-09-06'
+method: searched
+source: https://greenbutton.consumersenergy.com/
+description: >-
+  Standards and cross-cutting conformance for the CMS Energy / Consumers Energy API surface.
+  Two distinct surfaces are covered: the Green Button Connect My Data (GBCMD) customer-data
+  program, operated for Consumers Energy on the UtilityAPI EE/DER Engagement Platform, and the
+  first-party Esri ArcGIS REST/SOAP outage services on www.consumersenergy.com.
+domain_standard:
+  market: Energy & Utilities (regulated electric + natural gas distribution, Michigan)
+  standard: Green Button Connect My Data / NAESB ESPI 1.1 (OpenESPI)
+  declared_in_contract: true
+  contract_evidence:
+    - signature: ESPI 1.1 resource path namespace in the served REST surface
+      example: /DataCustodian/espi/1_1/resource/Batch/Subscription/{auth_uid}/UsagePoint/{meter_uid}
+      source: https://utilityapi.com/docs/greenbutton/api
+      note: >-
+        The Green Button REST API is served on the ESPI resource tree with the ESPI object model
+        verbatim — ApplicationInformation, Authorization, Subscription, UsagePoint, MeterReading,
+        IntervalBlock, UsageSummary, ElectricPowerQualitySummary, RetailCustomer, CustomerAccount,
+        CustomerAgreement, ServiceSupplier, ServiceLocation, EndDevice — and returns Atom XML.
+        That is the domain standard declared by the contract, not a marketing claim.
+    - signature: ESPI three-token model
+      detail: registration_access_token / client_access_token / access_token
+      source: https://utilityapi.com/docs/greenbutton/api
+    - signature: Green Button OAuth scope grammar
+      detail: 'scope=FB=4_16_51;AdditionalScope=auth-test-test_commercial'
+      source: https://utilityapi.com/docs/utilities/consumersenergy
+entries:
+  - id: green-button
+    name: Green Button Connect My Data
+    conforms: true
+    evidence: https://greenbutton.consumersenergy.com/
+    detail: >-
+      Consumers Energy states on its own Green Button host: "We have been certified by the Green
+      Button Alliance as compliant with the international Green Button Connect My Data standard."
+    verification: >-
+      Provider claim on a provider-controlled host (HTTP 200). The Green Button Alliance testing
+      page (https://www.greenbuttonalliance.org/testing, HTTP 200) does not carry a public
+      certified-custodian list naming Consumers Energy; UtilityAPI appears there as a GBA sponsor
+      member. The claim is recorded as the provider's, not as independently confirmed.
+  - id: espi
+    name: NAESB ESPI 1.1 (OpenESPI)
+    conforms: true
+    evidence: https://utilityapi.com/docs/greenbutton/api
+    detail: >-
+      The Green Button REST API for CONSUMERSENERGY is OpenESPI — ESPI resource paths, ESPI
+      object model, Atom XML entry/feed responses.
+  - id: dataguard
+    name: U.S. Department of Energy DataGuard Energy Data Privacy Program
+    conforms: true
+    evidence: https://greenbutton.consumersenergy.com/auth-help
+    detail: >-
+      "Our data sharing system is compliant with the U.S. Department of Energy's DataGuard Energy
+      Data Privacy Program and Green Button Connect My Data." Provider claim on a
+      provider-controlled host.
+  - id: oauth2
+    name: OAuth 2.0 Authorization Code Grant
+    conforms: true
+    evidence: https://utilityapi.com/docs/greenbutton/oauth
+    detail: >-
+      GBCMD authorization for CONSUMERSENERGY uses OAuth 2.0 authorization code
+      (response_type=code, client_id, redirect_uri, scope, state), plus client_credentials for
+      client_access_token issuance.
+  - id: oidc
+    name: OpenID Connect
+    conforms: partial
+    evidence: https://utilityapi.com/docs/utilities/consumersenergy
+    detail: >-
+      Customer authentication defaults to Consumers Energy single sign-on, described in the docs
+      as OpenIDConnect (scope value auth-sso). No OIDC discovery document is served on any host
+      probed (see well-known/cms-energy-well-known.yml) so the deployment could not be verified.
+  - id: rfc9116
+    name: RFC 9116 security.txt
+    conforms: true
+    evidence: https://www.consumersenergy.com/.well-known/security.txt
+    detail: Served with Contact, Expires, Preferred-Languages and Canonical. No Policy or Encryption field.
+  - id: rfc9457
+    name: RFC 9457 Problem Details for HTTP APIs
+    conforms: false
+    evidence: https://utilityapi.com/docs/formats
+    detail: >-
+      A stable, documented JSON error envelope exists (error / error_description / url) but it is
+      not application/problem+json and carries no type/title/status/detail/instance members.
+      The ArcGIS surface uses a third shape, {"error":{"code","message","details"}}.
+  - id: iso8601
+    name: ISO 8601 timestamps
+    conforms: true
+    evidence: https://utilityapi.com/docs/formats
+    detail: >-
+      All timestamps are ISO 8601 with an explicit offset; UTC by default, utility-local for
+      values parsed off bills and intervals.
+  - id: pagination
+    name: Documented pagination
+    conforms: partial
+    evidence: https://utilityapi.com/docs/webhooks
+    detail: >-
+      The JSON API returns a `next` cursor member (observed as `"next": null` in the documented
+      webhook/event payload). The ArcGIS surface pages by resultRecordCount within a hard
+      maxRecordCount of 1000. Neither is described as a single cross-surface pagination contract.
+  - id: idempotency
+    name: Idempotency keys on writes
+    conforms: false
+    evidence: https://utilityapi.com/docs/api
+    detail: >-
+      No Idempotency-Key header or equivalent replay-protection mechanism is documented on any
+      write operation. See conventions/cms-energy-conventions.yml.
+  - id: ogc-api
+    name: OGC API / OGC Web Services
+    conforms: false
+    evidence: https://www.consumersenergy.com/arcgispublic/rest/services/CEOutageMap/MapServer?f=json
+    detail: >-
+      The ArcGIS services report supportedExtensions "" (CEOutageMap) and "FeatureServer"
+      (ServiceDashboard) — the WMS/WFS/WCS OGC extensions are not enabled, so there is no
+      GetCapabilities document and no OGC conformance class to record. Recorded as a probed
+      absence, not an omission.
+  - id: soap-wsdl
+    name: WSDL 1.1 / SOAP 1.1
+    conforms: true
+    evidence: https://www.consumersenergy.com/arcgispublic/services/CEOutageMap/MapServer?wsdl
+    detail: >-
+      Both public map services publish a full WSDL 1.1 contract (55 operations each) and the
+      service catalog publishes its own (7 operations). Saved verbatim under wsdl/.
+compliance:
+  certifications:
+    - name: Green Button Alliance — Green Button Connect My Data compliance
+      claimed_by: Consumers Energy
+      source: https://greenbutton.consumersenergy.com/
+      independently_verified: false
+    - name: U.S. DOE DataGuard Energy Data Privacy Program
+      claimed_by: Consumers Energy
+      source: https://greenbutton.consumersenergy.com/auth-help
+      independently_verified: false
+  regulatory_context:
+    - Michigan Public Service Commission (MPSC) — rate and program oversight for Consumers Energy.
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP attestation is published on any CMS Energy or
+    Consumers Energy host probed, and no trust center exists.

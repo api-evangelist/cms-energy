@@ -1,0 +1,41 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Consumers Energy Green Button Connect My Data API (UtilityAPI)
+    Authorizations Meters API
+  version: 1.0.0
+extends: cms-energy-meters-api-openapi.yml
+x-provenance:
+  generated: '2026-09-06'
+  method: generated
+  source: openapi/cms-energy-meters-api-openapi.yml
+  note: Captures API Evangelist additions only. The underlying OpenAPI is never mutated.
+actions:
+- target: $.info
+  description: Attach API Evangelist provenance and operator attribution.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/cms-energy
+      repository: https://github.com/api-evangelist/cms-energy
+      note: Third-party profile. Not published or endorsed by CMS Energy.
+    x-operator: UtilityAPI, under licence to Consumers Energy (CMS Energy). Consumers Energy designates
+      https://utilityapi.com/docs/utilities/consumersenergy as the API documentation for its Green Button
+      Connect My Data program from its own host https://greenbutton.consumersenergy.com/.
+- target: $
+  description: Link the derived and searched artifacts that describe runtime behaviour this spec does
+    not carry.
+  update:
+    x-artifacts:
+      conventions: conventions/cms-energy-conventions.yml
+      errors: errors/cms-energy-problem-types.yml
+      rateLimits: rate-limits/cms-energy-rate-limits.yml
+      lifecycle: lifecycle/cms-energy-lifecycle.yml
+      authentication: authentication/cms-energy-authentication.yml
+      conformance: conformance/cms-energy-conformance.yml
+      dataModel: data-model/cms-energy-data-model.yml
+      agenticAccess: agentic-access/cms-energy-agentic-access.yml
+- target: $.paths..get
+  description: Record the published rate guidance and the exhaustion signal on read operations.
+  update:
+    x-rate-limit: 'Bill and interval downloads: 1/minute. All other GET/POST: 1/second. 429 carries Retry-After;
+      202 means the payload is being built asynchronously.'
+    x-error-envelope: error / error_description / url (not RFC 9457).

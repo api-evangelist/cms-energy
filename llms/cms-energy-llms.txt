@@ -1,0 +1,105 @@
+# CMS Energy
+
+> CMS Energy is a Michigan energy holding company whose principal subsidiary, Consumers Energy,
+> is a regulated electric and natural-gas utility. Two public API surfaces exist. One is
+> first-party and anonymous: an Esri ArcGIS Server publishing Consumers Energy outage and
+> service-territory geodata over REST and SOAP at www.consumersenergy.com/arcgispublic. The
+> other is the Green Button Connect My Data (GBCMD) customer-data program, which Consumers
+> Energy operates on the UtilityAPI EE/DER Engagement Platform and which requires third-party
+> registration plus a customer's OAuth authorization.
+
+Generated: 2026-09-06 by API Evangelist (apievangelist.com) from this repository's artifacts.
+Method: generated. No llms.txt is published by CMS Energy — /llms.txt was probed on
+www.cmsenergy.com, www.consumersenergy.com, greenbutton.consumersenergy.com and utilityapi.com
+and returned 404 on all four.
+
+This is a third-party profile. It is not published by CMS Energy and is not endorsed by them.
+
+## Start here
+
+- [Consumers Energy Green Button home](https://greenbutton.consumersenergy.com/): the utility's
+  own data-sharing portal — customer authorizations, third-party directory, registration.
+- [Third-party registration](https://greenbutton.consumersenergy.com/third-party/register):
+  required before any GBCMD data request. You start in sandbox mode.
+- [API documentation](https://utilityapi.com/docs/utilities/consumersenergy): the Consumers
+  Energy utility page on the platform Consumers Energy licenses for GBCMD. Utility ID is
+  CONSUMERSENERGY.
+- [Consumers Energy outage map](https://www.consumersenergy.com/outagemap): the human view of
+  the anonymous ArcGIS services below.
+
+## Anonymous first-party API — outage and service territory
+
+No key, no registration. ArcGIS Server 11.5.
+
+- Service catalog: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+- Server info: https://www.consumersenergy.com/arcgispublic/rest/info?f=json
+- CEOutageMap (MapServer, 7 layers): outage jobs with JOB_ID, CUSTOMER_COUNT, CAUSE_CD,
+  CAUSE_DESC, OUTAGE_TIME, EST_TIME_RESTORATION, EST_TIME_ETR, CREW_ASSIGNED; layer 0 is the
+  electric service territory polygon.
+- ServiceDashboard (MapServer + FeatureServer, 5 layers): CE_County_Outages (layer 3) and
+  CE_City_Outages (layer 4) rollups, plus CustomersInterruptedPercent, NumberOfInterruptions
+  and NumberOfWireDowns.
+- Query pattern: `/services/<service>/<Server>/<layerId>/query?where=1=1&outFields=*&f=json`.
+  maxRecordCount is 1000 per response; page with resultRecordCount / resultOffset.
+- SOAP: every map service also publishes a WSDL 1.1 contract with 55 operations at
+  `/arcgispublic/services/<service>/MapServer?wsdl`, and the catalog publishes 7 more.
+- No OGC extension. supportedExtensions is empty on CEOutageMap and "FeatureServer" on
+  ServiceDashboard, so there is no WMS/WFS GetCapabilities.
+- Errors come back as `{"error":{"code","message","details"}}`, sometimes under HTTP 200 — parse
+  the body, not the status.
+
+## Gated first-party program — Green Button Connect My Data
+
+- Base: https://utilityapi.com/api/v2 (JSON) and
+  https://utilityapi.com/DataCustodian/espi/1_1/resource (Green Button REST / OpenESPI, Atom XML).
+- Register with Consumers Energy as a third party to be assigned a client_id. Registration
+  begins in sandbox mode; Consumers Energy reviews it and emails you when you may go live.
+- Customer authorization is Green Button OAuth 2.0 authorization code. Default customer
+  authentication is Consumers Energy single sign-on (scope value `auth-sso`); the test scenarios
+  `test_residential`, `test_commercial` and `test_empty` are selectable with
+  `AdditionalScope=auth-test-<scenario>`.
+- Three ESPI token classes: registration_access_token (registration endpoints),
+  client_access_token (authorization and bulk endpoints), access_token (resource and batch
+  endpoints). All are sent as `Authorization: Bearer`.
+- Resources: authorizations, meters, bills, intervals, files, events, accounting
+  (billing-accounts, billing-summaries), templates, forms.
+- Rate guidance: at most 1 bill or interval download per minute; at most 1 of everything else
+  per second. Exhaustion returns 429 with Retry-After. A 202 with Retry-After means the payload
+  is being built asynchronously.
+- Error envelope: `{"error", "error_description", "url"}`. Not RFC 9457.
+- Timestamps are ISO 8601. UTC by default, but values parsed off bills and intervals carry the
+  utility's LOCAL timezone.
+- Webhooks are opt-in, HMAC-SHA256 signed, retried hourly for 72 hours, and NOT ordered. 23
+  documented event types.
+- Revoking an authorization deletes collected data and access credentials. It cannot be undone
+  from the third-party side; the customer must authorize again.
+
+## Standards
+
+- Green Button Connect My Data — Consumers Energy states it is certified by the Green Button
+  Alliance as compliant.
+- NAESB ESPI 1.1 (OpenESPI) — the resource tree, object model and Atom XML are ESPI.
+- U.S. Department of Energy DataGuard Energy Data Privacy Program — stated compliance.
+- OAuth 2.0 authorization code and client credentials.
+- RFC 9116 security.txt at https://www.consumersenergy.com/.well-known/security.txt
+
+## What does NOT exist
+
+Checked on 2026-09-06 and absent, so do not go looking:
+
+- No MCP server, no A2A agent card, no llms.txt, no OpenAPI published by the provider.
+- No first-party SDK in any package registry. github.com/utilityapi has zero public repos.
+- No API status page (status.utilityapi.com does not resolve). The authenticated ESPI
+  `GET /ReadServiceStatus` is the only health endpoint.
+- No changelog, no deprecation policy, no Sunset/Deprecation headers, no published SLA.
+- No idempotency keys on any write.
+- No OpenID Connect discovery document on any host.
+
+## Repository artifacts
+
+- openapi/cms-energy-outage-map-api-openapi.yml — generated from live ArcGIS metadata
+- openapi/cms-energy-*-api-openapi.yml — the Green Button JSON/ESPI surface
+- wsdl/ — three verbatim WSDL contracts fetched from the Consumers Energy ArcGIS host
+- well-known/, security/, conformance/, errors/, lifecycle/, conventions/, sandbox/,
+  rate-limits/, data-model/, packages/, mcp/, asyncapi/, skills/, plans/, scopes/,
+  authentication/, agentic-access/, collections/

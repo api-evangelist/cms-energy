@@ -1,0 +1,219 @@
+generated: '2026-09-06'
+method: derived
+source: openapi/ + https://utilityapi.com/docs/greenbutton/api + probed ArcGIS layer schemas
+description: >-
+  Entity graph across the two CMS Energy API surfaces. The Green Button side is the NAESB ESPI
+  object model as the program serves it; the ArcGIS side is read from live layer field schemas
+  probed on 2026-09-06.
+identifiers:
+  style: opaque UID strings assigned by the platform (may look numeric — do not treat as integers)
+  persistent_uuids: >-
+    The Green Button REST API additionally exposes persistent UUIDs per resource so a consumer can
+    ingest only new data across authorizations.
+  prefixes_published: false
+  source: https://utilityapi.com/docs/formats
+domains:
+  - name: Customer data sharing (Green Button / ESPI)
+    base: https://utilityapi.com/api/v2 and https://utilityapi.com/DataCustodian/espi/1_1/resource
+    operator: UtilityAPI, under licence to Consumers Energy
+  - name: Outage and service territory geodata
+    base: https://www.consumersenergy.com/arcgispublic/rest
+    operator: Consumers Energy (first party)
+entities:
+  - name: Template
+    domain: Customer data sharing
+    description: A reusable configuration for authorization forms.
+    source: https://utilityapi.com/docs/api/templates
+  - name: Form
+    domain: Customer data sharing
+    description: An authorization request presented to a Consumers Energy customer.
+    source: https://utilityapi.com/docs/api/forms
+  - name: Authorization
+    domain: Customer data sharing
+    description: >-
+      The customer's grant of data access to a third party. The root of everything downstream;
+      revoking it deletes the collected data.
+    rest: [listAuthorizations, getAuthorization, deleteAuthorization]
+    espi: Subscription / Authorization
+  - name: Meter
+    domain: Customer data sharing
+    description: A metered service point covered by an authorization.
+    rest: [listMeters, getMeter]
+    espi: UsagePoint
+  - name: Bill
+    domain: Customer data sharing
+    description: A billing period record for a meter.
+    rest: [listBills]
+    espi: UsageSummary
+  - name: Interval
+    domain: Customer data sharing
+    description: Granular interval usage time series for a meter.
+    rest: [listIntervals]
+    espi: MeterReading / IntervalBlock
+  - name: BillingAccount
+    domain: Customer data sharing
+    description: Account-level accounting record.
+    source: https://utilityapi.com/docs/api/accounting/billing-accounts
+  - name: BillingSummary
+    domain: Customer data sharing
+    description: Account-level summary record.
+    source: https://utilityapi.com/docs/api/accounting/billing-summaries
+  - name: Event
+    domain: Customer data sharing
+    description: Lifecycle notification, readable from /events and pushed by webhook.
+    source: https://utilityapi.com/docs/webhooks
+  - name: File
+    domain: Customer data sharing
+    description: Raw file/download linked from other resources (ESPI Non-ESPI endpoint).
+    source: https://utilityapi.com/docs/api/files
+  - name: RetailCustomer
+    domain: Customer data sharing
+    description: ESPI customer identity behind an authorization.
+    espi: RetailCustomer
+  - name: CustomerAccount
+    domain: Customer data sharing
+    espi: CustomerAccount
+  - name: CustomerAgreement
+    domain: Customer data sharing
+    espi: CustomerAgreement
+  - name: ServiceLocation
+    domain: Customer data sharing
+    espi: ServiceLocation
+  - name: EndDevice
+    domain: Customer data sharing
+    espi: EndDevice
+  - name: ServiceSupplier
+    domain: Customer data sharing
+    espi: ServiceSupplier
+  - name: ElectricPowerQualitySummary
+    domain: Customer data sharing
+    espi: ElectricPowerQualitySummary
+  - name: CountyOutage
+    domain: Outage geodata
+    layer: ServiceDashboard/MapServer/3 (CE_County_Outages)
+    geometry: esriGeometryPolygon
+    fields:
+      - {name: OBJECTID, type: esriFieldTypeOID}
+      - {name: COUNTY_NAME, type: esriFieldTypeString, length: 20}
+      - {name: COUNTY_ID, type: esriFieldTypeSmallInteger}
+      - {name: CUSTOMER_COUNT, type: esriFieldTypeInteger}
+      - {name: OUTAGE_COUNT, type: esriFieldTypeInteger}
+      - {name: LAST_UPDATED, type: esriFieldTypeDate}
+      - {name: PCT_CUSTOMERS_OUT, type: esriFieldTypeDouble}
+      - {name: CRITICAL_COUNT, type: esriFieldTypeInteger}
+      - {name: PRIORITY_COUNT, type: esriFieldTypeInteger}
+      - {name: SHAPE, type: esriFieldTypeGeometry}
+    observed_feature_count: 61
+    source: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer/3?f=json
+  - name: CityOutage
+    domain: Outage geodata
+    layer: ServiceDashboard/MapServer/4 (CE_City_Outages)
+    geometry: esriGeometryPolygon
+    source: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer?f=json
+  - name: OutageJob
+    domain: Outage geodata
+    layer: CEOutageMap/MapServer/1, /2, /5 (Number of Customers Affected)
+    geometry: esriGeometryPolygon
+    fields:
+      - {name: OBJECTID, type: esriFieldTypeOID}
+      - {name: JOB_ID, type: esriFieldTypeString}
+      - {name: CUSTOMER_COUNT, type: esriFieldTypeSmallInteger}
+      - {name: CREW_ASSIGNED, type: esriFieldTypeSmallInteger}
+      - {name: GROUP_LEVEL, type: esriFieldTypeSmallInteger}
+      - {name: NEEDS_UPDATED, type: esriFieldTypeSmallInteger}
+      - {name: OUTAGE_TIME, type: esriFieldTypeDate}
+      - {name: EST_TIME_RESTORATION, type: esriFieldTypeDate}
+      - {name: EST_TIME_ETR, type: esriFieldTypeDate}
+      - {name: CAUSE_CD, type: esriFieldTypeString}
+      - {name: CAUSE_DESC, type: esriFieldTypeString}
+      - {name: DisplayStormMessaging, type: esriFieldTypeSmallInteger}
+      - {name: SHAPE, type: esriFieldTypeGeometry}
+    source: https://www.consumersenergy.com/arcgispublic/rest/services/CEOutageMap/MapServer/1?f=json
+  - name: ServiceTerritory
+    domain: Outage geodata
+    layer: CEOutageMap/MapServer/0 (Service Territory)
+    geometry: esriGeometryPolygon
+  - name: InterruptionMetric
+    domain: Outage geodata
+    layer: ServiceDashboard/MapServer/0-2 (CustomersInterruptedPercent, NumberOfInterruptions, NumberOfWireDowns)
+    geometry: esriGeometryPolygon
+relationships:
+  - from: Template
+    to: Form
+    type: has_many
+    via: template configuration
+  - from: Form
+    to: Authorization
+    type: has_many
+    via: form submission by the customer
+  - from: Authorization
+    to: Meter
+    type: has_many
+    via: authorization_uid
+  - from: Meter
+    to: Bill
+    type: has_many
+    via: meters query parameter (/bills?meters=NNN)
+  - from: Meter
+    to: Interval
+    type: has_many
+    via: meters query parameter (/intervals?meters=NNN)
+  - from: Authorization
+    to: Event
+    type: has_many
+    via: authorization_uid on event payloads
+  - from: Meter
+    to: Event
+    type: has_many
+    via: meter_uid on event payloads
+  - from: Authorization
+    to: BillingAccount
+    type: has_many
+    via: accounting endpoints
+  - from: BillingAccount
+    to: BillingSummary
+    type: has_many
+    via: accounting endpoints
+  - from: Authorization
+    to: RetailCustomer
+    type: has_one
+    via: ESPI /RetailCustomer/{auth_uid}
+  - from: RetailCustomer
+    to: CustomerAccount
+    type: has_many
+    via: ESPI path nesting
+  - from: CustomerAccount
+    to: CustomerAgreement
+    type: has_many
+    via: ESPI path nesting
+  - from: CustomerAgreement
+    to: ServiceLocation
+    type: has_many
+    via: ESPI path nesting
+  - from: ServiceLocation
+    to: EndDevice
+    type: has_many
+    via: ESPI path nesting
+  - from: CustomerAgreement
+    to: ServiceSupplier
+    type: has_many
+    via: ESPI path nesting
+  - from: Meter
+    to: ElectricPowerQualitySummary
+    type: has_many
+    via: ESPI /Subscription/{auth_uid}/UsagePoint/{meter_uid}/ElectricPowerQualitySummary
+  - from: ServiceTerritory
+    to: CountyOutage
+    type: has_many
+    via: spatial containment (no shared key field is published)
+  - from: CountyOutage
+    to: CityOutage
+    type: has_many
+    via: spatial containment (no shared key field is published)
+  - from: CountyOutage
+    to: OutageJob
+    type: has_many
+    via: spatial containment — OutageJob carries JOB_ID but no COUNTY_ID
+cross_domain_note: >-
+  The two domains do not join. Outage geodata is aggregate and anonymous; Green Button data is
+  per-customer and consent-scoped. No published field links a meter to an outage job.

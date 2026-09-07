@@ -1,0 +1,77 @@
+generated: '2026-09-06'
+method: searched
+source: https://utilityapi.com/docs/greenbutton/api
+description: >-
+  Versioning, deprecation, status and SLA posture across the two CMS Energy API surfaces.
+versioning:
+  - surface: Consumers Energy GBCMD JSON API
+    scheme: path
+    current: v2
+    example_base: https://utilityapi.com/api/v2
+    source: https://utilityapi.com/docs/authentication
+    note: >-
+      A per-tenant path segment appears on one documented endpoint (the On Demand Read API,
+      /api/XXX/odr), so the version segment is not uniformly v2 across the whole surface.
+  - surface: Consumers Energy Green Button REST API (OpenESPI)
+    scheme: standard-version-in-path
+    current: espi/1_1
+    example_base: https://utilityapi.com/DataCustodian/espi/1_1/resource
+    source: https://utilityapi.com/docs/greenbutton/api
+  - surface: Consumers Energy ArcGIS REST / SOAP services
+    scheme: product-version
+    current: '11.5'
+    full_version: 11.5.0
+    cim_version: 3.5.0
+    source: https://www.consumersenergy.com/arcgispublic/rest/info?f=json
+    note: >-
+      The version is the Esri ArcGIS Server release, reported by the service itself. It is not a
+      contract version CMS Energy manages, and it moves when the utility upgrades the server.
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No deprecation policy, Sunset header, Deprecation header or breaking-change notice period is
+    published on any host probed. Forward-compatibility guidance exists but is not a policy: the
+    error-format docs instruct consumers to tolerate error types that "we may add in the future",
+    and the Green Button API notes that persistent UUIDs are supported so a consumer can ingest
+    only new data between authorizations.
+deprecated_operations: []
+status_page:
+  present: false
+  probed:
+    - url: https://status.utilityapi.com
+      status: 0
+      note: Does not resolve.
+  machine_readable_health:
+    - endpoint: GET /ReadServiceStatus
+      base: https://utilityapi.com/DataCustodian/espi/1_1/resource
+      auth: client_access_token
+      returns: An ESPI ServiceStatus object.
+      source: https://utilityapi.com/docs/greenbutton/api
+      note: >-
+        This is a real health endpoint, but it is authenticated — an agent cannot check whether
+        the API is up before it holds a token, and there is no anonymous status page to fall back
+        on. Recorded as machine-readable health, NOT as a status page.
+  operational_status_surface:
+    - name: Consumers Energy Outage Map
+      url: https://www.consumersenergy.com/outagemap
+      status: 200
+      note: >-
+        Anonymous and machine-readable via the ArcGIS services, but it reports ELECTRIC SERVICE
+        outages to customers, not API availability. It is not an API status page.
+sla:
+  published: false
+  note: >-
+    No availability or support-response SLA is published for the GBCMD program or the ArcGIS
+    services. Program obligations sit in MPSC filings and in the Third Party Agreement at
+    https://greenbutton.consumersenergy.com/third-party/terms rather than in a developer SLA.
+support:
+  - channel: Green Button support request form
+    url: https://greenbutton.consumersenergy.com/
+    status: 200
+  - channel: Consumers Energy contact
+    url: https://www.consumersenergy.com/contact-us
+  - channel: Platform support
+    url: https://utilityapi.com/support

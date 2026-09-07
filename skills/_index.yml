@@ -1,0 +1,44 @@
+generated: '2026-09-06'
+method: generated
+source: >-
+  openapi/ in this repo, plus https://utilityapi.com/docs/* and
+  https://greenbutton.consumersenergy.com/ — every operationId referenced was verified against a
+  spec file in this repository, and every rule was read off the provider's own documentation.
+description: >-
+  Packaged Agent Skills for the CMS Energy / Consumers Energy API surface. No skills or AGENTS.md
+  are published by the provider (searched; none found), so these are generated and grounded in
+  real operationIds — one per marquee flow, split by the auth wall that separates the two
+  surfaces.
+skills:
+  - name: cms-energy-check-outages
+    file: cms-energy-check-outages.md
+    api: Consumers Energy Outage Map ArcGIS REST API
+    auth: none
+    gated: false
+    operations: [listServices, describeServiceDashboardMapService, describeServiceDashboardLayer,
+                 queryServiceDashboardLayer, describeOutageMapService, describeOutageMapLayer,
+                 queryOutageMapLayer]
+    summary: >-
+      Read live Michigan outage counts by county or city, and individual outage jobs with cause
+      and estimated restoration, with no credentials at all.
+  - name: cms-energy-greenbutton-authorization
+    file: cms-energy-greenbutton-authorization.md
+    api: Consumers Energy Green Button Connect My Data
+    auth: bearer + per-customer OAuth 2.0
+    gated: true
+    operations: [listAuthorizations, getAuthorization, deleteAuthorization]
+    summary: >-
+      Register as a Consumers Energy third party, run Green Button OAuth against the
+      CONSUMERSENERGY utility id including the published sandbox scenarios, verify the
+      authorization, and revoke it knowing revocation is irreversible.
+  - name: cms-energy-pull-usage-data
+    file: cms-energy-pull-usage-data.md
+    api: Consumers Energy Green Button Connect My Data
+    auth: bearer (ESPI token classes)
+    gated: true
+    operations: [listMeters, getMeter, listBills, listIntervals, getEspiBatch]
+    summary: >-
+      Pull meters, bills and interval usage as JSON, or the same data as Green Button ESPI 1.1
+      Atom XML, respecting the three token classes, the 202 async path and the mixed timezone
+      rule.
+skill_count: 3
