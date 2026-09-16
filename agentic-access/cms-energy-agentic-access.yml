@@ -1,16 +1,19 @@
-generated: '2026-07-15'
+generated: '2026-09-16'
 method: generated
-source: openapi/cms-energy-openapi.yml
+source: openapi/cms-energy-authorizations-api-openapi.yml, openapi/cms-energy-bills-api-openapi.yml,
+  openapi/cms-energy-catalog-api-openapi.yml, openapi/cms-energy-greenbutton-api-openapi.yml,
+  openapi/cms-energy-intervals-api-openapi.yml, openapi/cms-energy-meters-api-openapi.yml, openapi/cms-energy-outage-map-api-openapi.yml,
+  openapi/cms-energy-service-dashboard-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
-  operations: 8
+  operations: 19
   by_action_class:
-    connected: 7
+    connected: 18
     acting: 1
   by_consequence:
-    read: 7
+    read: 18
     safety-critical: 1
   human_in_the_loop_required: 1
 operations:
@@ -50,6 +53,66 @@ operations:
     escalation:
       human-in-the-loop: required
     audit: required
+- path: /bills
+  method: get
+  operationId: listBills
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /info
+  method: get
+  operationId: getServerInfo
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services
+  method: get
+  operationId: listServices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services/{folder}
+  method: get
+  operationId: listFolderServices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /DataCustodian/espi/1_1/resource/Batch/Subscription/{subscriptionId}/UsagePoint/{usagePointId}
+  method: get
+  operationId: getEspiBatch
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /intervals
+  method: get
+  operationId: listIntervals
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /meters
   method: get
   operationId: listMeters
@@ -70,9 +133,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /bills
+- path: /services/CEOutageMap/MapServer
   method: get
-  operationId: listBills
+  operationId: describeOutageMapService
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -80,9 +143,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /intervals
+- path: /services/CEOutageMap/MapServer/{layerId}
   method: get
-  operationId: listIntervals
+  operationId: describeOutageMapLayer
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -90,9 +153,59 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /DataCustodian/espi/1_1/resource/Batch/Subscription/{subscriptionId}/UsagePoint/{usagePointId}
+- path: /services/CEOutageMap/MapServer/{layerId}/query
   method: get
-  operationId: getEspiBatch
+  operationId: queryOutageMapLayer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services/ServiceDashboard/MapServer
+  method: get
+  operationId: describeServiceDashboardMapService
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services/ServiceDashboard/MapServer/{layerId}
+  method: get
+  operationId: describeServiceDashboardLayer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services/ServiceDashboard/MapServer/{layerId}/query
+  method: get
+  operationId: queryServiceDashboardLayer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services/ServiceDashboard/FeatureServer
+  method: get
+  operationId: describeServiceDashboardFeatureService
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /services/ServiceDashboard/FeatureServer/{layerId}/query
+  method: get
+  operationId: queryServiceDashboardFeatureLayer
   x-agentic-access:
     action-class: connected
     consequence: read
