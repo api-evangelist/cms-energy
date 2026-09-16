@@ -67,11 +67,13 @@ apis:
     type: Documentation
   - url: https://utilityapi.com/
     type: Portal
-  description: The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas
-    usage data to registered third parties using the NAESB ESPI / Green Button standard. Authorization uses OAuth
-    2.0 with single sign-on or test-account scopes; data is delivered as Green Button XML or JSON via UtilityAPI's
-    standardized endpoints (Meters, Bills, Intervals, Billing Summaries). Third parties register with Consumers
-    Energy, are issued a client_id, and start in sandbox mode before being approved for live data.
+  description: >-
+    The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas
+    usage data to registered third parties using the NAESB ESPI / Green Button standard. Authorization
+    uses OAuth 2.0 with single sign-on or test-account scopes; data is delivered as Green Button XML or
+    JSON via UtilityAPI's standardized endpoints (Meters, Bills, Intervals, Billing Summaries). Third
+    parties register with Consumers Energy, are issued a client_id, and start in sandbox mode before being
+    approved for live data.
   x-features:
   - name: Green Button Standard
     description: NAESB ESPI / Green Button XML for usage point and interval data.
@@ -166,13 +168,15 @@ apis:
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 - aid: cms-energy:cms-energy-outage-map-api
   name: Consumers Energy Outage Map ArcGIS REST API
-  description: Consumers Energy publishes its outage map data as an anonymous Esri ArcGIS Server 11.5 REST Services
-    Directory on its own domain — no key, no account, no registration. CEOutageMap carries seven layers including
-    the electric service territory polygon and live outage jobs (JOB_ID, CUSTOMER_COUNT, CAUSE_CD, CAUSE_DESC, OUTAGE_TIME,
-    EST_TIME_RESTORATION, CREW_ASSIGNED); ServiceDashboard carries five county- and city-level rollups (CE_County_Outages,
-    CE_City_Outages, CustomersInterruptedPercent, NumberOfInterruptions, NumberOfWireDowns) over both a MapServer
-    and a FeatureServer. Every map service also publishes a WSDL 1.1 SOAP contract with 55 operations. This is the
-    only first-party, CMS-Energy-operated machine-readable API surface in the profile.
+  description: >-
+    Consumers Energy publishes its outage map data as an anonymous Esri ArcGIS Server 11.5 REST Services
+    Directory on its own domain — no key, no account, no registration. CEOutageMap carries seven layers
+    including the electric service territory polygon and live outage jobs (JOB_ID, CUSTOMER_COUNT, CAUSE_CD,
+    CAUSE_DESC, OUTAGE_TIME, EST_TIME_RESTORATION, CREW_ASSIGNED); ServiceDashboard carries five county-
+    and city-level rollups (CE_County_Outages, CE_City_Outages, CustomersInterruptedPercent, NumberOfInterruptions,
+    NumberOfWireDowns) over both a MapServer and a FeatureServer. Every map service also publishes a WSDL
+    1.1 SOAP contract with 55 operations. This is the only first-party, CMS-Energy-operated machine-readable
+    API surface in the profile.
   humanURL: https://www.consumersenergy.com/outagemap
   baseURL: https://www.consumersenergy.com/arcgispublic/rest
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
@@ -211,6 +215,26 @@ apis:
     description: Interruption counts and wire-downs by area over time.
   - name: Service territory mapping
     description: Retrieve the Consumers Energy electric service territory polygon.
+- aid: cms-energy:cms-energy-catalog-api
+  name: CMS Energy Catalog API
+  description: Service discovery — folders, services and server version information.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  baseURL: https://utilityapi.com/api/v2
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-catalog-api-openapi.yml
+- aid: cms-energy:cms-energy-service-dashboard-api
+  name: CMS Energy Service Dashboard API
+  description: County- and city-level outage rollups published as map and feature layers.
+  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  baseURL: https://utilityapi.com/api/v2
+  tags:
+  - Service Dashboard
+  properties:
+  - type: OpenAPI
+    url: openapi/cms-energy-service-dashboard-api-openapi.yml
 common:
 - type: AgenticAccess
   url: agentic-access/cms-energy-agentic-access.yml
