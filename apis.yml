@@ -104,6 +104,8 @@ apis:
   description: The Authorizations API from CMS Energy — 2 operation(s) for authorizations.
   humanURL: https://utilityapi.com/docs/utilities/consumersenergy
   tags:
+  - Authorization
+  tags_raw:
   - Authorizations
   properties:
   - type: OpenAPI
