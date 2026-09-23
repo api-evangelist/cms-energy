@@ -1,7 +1,9 @@
 ---
 title: CMS Energy Corp. and Terry Woolley
 url: https://www.sec.gov/enforcement-litigation/administrative-proceedings/33-8403
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"CMS Energy" press release artificial intelligence'
 position: 4
 source: serpapi-google

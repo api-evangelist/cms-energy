@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Consumers Energy ArcGIS REST Outage Map API
+  title: Consumers Energy Outage Map ArcGIS REST … Service Dashboard…
   version: '11.5'
   summary: Anonymous, first-party ArcGIS REST services publishing Consumers Energy outage and service-territory geodata.
   description: 'Consumers Energy (the regulated Michigan electric and natural-gas utility of CMS Energy)
@@ -17,18 +17,18 @@ servers:
 - url: https://www.consumersenergy.com/arcgispublic/rest
   description: Consumers Energy public ArcGIS Server REST Services Directory (anonymous).
 tags:
-- name: Outage Map
-  description: The CEOutageMap map service behind the public Consumers Energy outage map.
+- name: Service Dashboard
+  description: County- and city-level outage rollups published as map and feature layers.
 paths:
-  /services/CEOutageMap/MapServer:
+  /services/ServiceDashboard/MapServer:
     get:
-      summary: Describe the CEOutageMap map service
-      description: 'Consumers Energy Outage Map. Capabilities `Map,Query,Data`; maxRecordCount 1000;
+      summary: Describe the ServiceDashboard map service
+      description: 'Prod ServiceDashboard. Capabilities `Query,Map,Data`; supportedExtensions `FeatureServer`;
 
-        supported query formats JSON, geoJSON, PBF. Seven feature layers (0-6).'
-      operationId: describeOutageMapService
+        maxRecordCount 1000. Five feature layers (0-4).'
+      operationId: describeServiceDashboardMapService
       tags:
-      - Outage Map
+      - Service Dashboard
       parameters:
       - $ref: '#/components/parameters/Format'
       responses:
@@ -38,14 +38,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MapServiceInfo'
-  /services/CEOutageMap/MapServer/{layerId}:
+  /services/ServiceDashboard/MapServer/{layerId}:
     get:
-      summary: Describe an outage map layer
-      operationId: describeOutageMapLayer
+      summary: Describe a ServiceDashboard layer
+      operationId: describeServiceDashboardLayer
       tags:
-      - Outage Map
+      - Service Dashboard
       parameters:
-      - $ref: '#/components/parameters/OutageMapLayerId'
+      - $ref: '#/components/parameters/DashboardLayerId'
       - $ref: '#/components/parameters/Format'
       responses:
         '200':
@@ -56,19 +56,19 @@ paths:
                 $ref: '#/components/schemas/LayerInfo'
         '404':
           $ref: '#/components/responses/ArcGisError'
-  /services/CEOutageMap/MapServer/{layerId}/query:
+  /services/ServiceDashboard/MapServer/{layerId}/query:
     get:
-      summary: Query an outage map layer
-      description: 'Attribute/spatial query against a CEOutageMap layer. Layers 1, 2 and 5 carry live outage
+      summary: Query a ServiceDashboard layer
+      description: 'Attribute query against the county/city outage rollups. Layer 3 (CE_County_Outages)
 
-        job attributes (JOB_ID, CUSTOMER_COUNT, CAUSE_CD, CAUSE_DESC, OUTAGE_TIME,
+        exposes COUNTY_NAME, COUNTY_ID, CUSTOMER_COUNT, OUTAGE_COUNT, PCT_CUSTOMERS_OUT,
 
-        EST_TIME_RESTORATION, EST_TIME_ETR, CREW_ASSIGNED).'
-      operationId: queryOutageMapLayer
+        CRITICAL_COUNT, PRIORITY_COUNT and LAST_UPDATED.'
+      operationId: queryServiceDashboardLayer
       tags:
-      - Outage Map
+      - Service Dashboard
       parameters:
-      - $ref: '#/components/parameters/OutageMapLayerId'
+      - $ref: '#/components/parameters/DashboardLayerId'
       - $ref: '#/components/parameters/Where'
       - $ref: '#/components/parameters/OutFields'
       - $ref: '#/components/parameters/ReturnGeometry'
@@ -78,6 +78,49 @@ paths:
       responses:
         '200':
           description: Query result — a feature set, or a count when returnCountOnly is true.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResult'
+        '400':
+          $ref: '#/components/responses/ArcGisError'
+  /services/ServiceDashboard/FeatureServer:
+    get:
+      summary: Describe the ServiceDashboard feature service
+      description: 'The FeatureServer projection of the same five layers. Advertised capabilities are
+
+        `Query,Create,Update,Delete,Uploads,Editing`; editing operations were NOT probed and are
+
+        expected to require the token service at /arcgispublic/tokens/.'
+      operationId: describeServiceDashboardFeatureService
+      tags:
+      - Service Dashboard
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Feature service description.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapServiceInfo'
+  /services/ServiceDashboard/FeatureServer/{layerId}/query:
+    get:
+      summary: Query a ServiceDashboard feature layer
+      operationId: queryServiceDashboardFeatureLayer
+      tags:
+      - Service Dashboard
+      parameters:
+      - $ref: '#/components/parameters/DashboardLayerId'
+      - $ref: '#/components/parameters/Where'
+      - $ref: '#/components/parameters/OutFields'
+      - $ref: '#/components/parameters/ReturnGeometry'
+      - $ref: '#/components/parameters/ReturnCountOnly'
+      - $ref: '#/components/parameters/ResultRecordCount'
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Query result.
           content:
             application/json:
               schema:
@@ -229,20 +272,6 @@ components:
       schema:
         type: string
       example: 1=1
-    OutageMapLayerId:
-      name: layerId
-      in: path
-      required: true
-      description: 'CEOutageMap layer id. 0 Service Territory; 1, 2 and 5 Number of Customers Affected;
-
-        3, 4 and 6 Percentage of Customers Affected.
-
-        '
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 6
-      example: 1
     Format:
       name: f
       in: query
@@ -275,6 +304,20 @@ components:
         type: integer
         minimum: 1
         maximum: 1000
+    DashboardLayerId:
+      name: layerId
+      in: path
+      required: true
+      description: 'ServiceDashboard layer id. 0 CustomersInterruptedPercent; 1 NumberOfInterruptions;
+
+        2 NumberOfWireDowns; 3 CE_County_Outages; 4 CE_City_Outages.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 4
+      example: 3
   responses:
     ArcGisError:
       description: ArcGIS error envelope.

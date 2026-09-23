@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations API
+  title: Consumers Energy Green Button Connect My Data API…
   description: 'Best-effort OpenAPI 3.1 description of UtilityAPI''s REST surface for the
 
     Consumers Energy Green Button Connect My Data program. The API exposes
@@ -11,9 +11,7 @@ info:
 
     Green Button OAuth flow); third parties must be pre-registered with
 
-    Consumers Energy and use utility ID `CONSUMERSENERGY`.
-
-    '
+    Consumers Energy and use utility ID `CONSUMERSENERGY`.'
   version: '2.0'
   contact:
     name: UtilityAPI - Consumers Energy

@@ -1,29 +1,43 @@
 {
   "provider": "cms-energy",
   "sources": [
-    "cms-energy-authorizations-api-openapi.yml",
-    "cms-energy-bills-api-openapi.yml",
-    "cms-energy-greenbutton-api-openapi.yml",
-    "cms-energy-intervals-api-openapi.yml",
-    "cms-energy-meters-api-openapi.yml"
+    "_original/cms-energy-openapi.yml",
+    "cms-energy-catalog-api-openapi.yml",
+    "cms-energy-outage-map-api-openapi.yml",
+    "cms-energy-service-dashboard-api-openapi.yml"
   ],
   "outputs": [
     "cms-energy-authorizations-api-openapi.yml",
     "cms-energy-bills-api-openapi.yml",
     "cms-energy-greenbutton-api-openapi.yml",
     "cms-energy-intervals-api-openapi.yml",
-    "cms-energy-meters-api-openapi.yml"
+    "cms-energy-meters-api-openapi.yml",
+    "cms-energy-catalog-api-openapi.yml",
+    "cms-energy-outage-map-api-openapi.yml",
+    "cms-energy-service-dashboard-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "cms-energy-catalog-api-openapi.yml: previously refined output kept for 3 operation(s) no archived document covers (e.g. /info get, /services get, /services/{folder} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "cms-energy-outage-map-api-openapi.yml: previously refined output kept for 3 operation(s) no archived document covers (e.g. /services/CEOutageMap/MapServer get, /services/CEOutageMap/MapServer/{layerId} get, /services/CEOutageMap/MapServer/{layerId}/query get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "cms-energy-service-dashboard-api-openapi.yml: previously refined output kept for 5 operation(s) no archived document covers (e.g. /services/ServiceDashboard/FeatureServer get, /services/ServiceDashboard/FeatureServer/{layerId}/query get, /services/ServiceDashboard/MapServer get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
+  ],
   "notes": [
-    "cms-energy-authorizations-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "cms-energy-bills-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "cms-energy-greenbutton-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "cms-energy-intervals-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "cms-energy-meters-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "cms-energy-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "cms-energy-openapi.yml: declared missing tag: Authorizations",
+    "cms-energy-openapi.yml: declared missing tag: Bills",
+    "cms-energy-openapi.yml: declared missing tag: GreenButton",
+    "cms-energy-openapi.yml: declared missing tag: Intervals",
+    "cms-energy-openapi.yml: declared missing tag: Meters",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "cms-energy-authorizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-energy-bills-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-energy-greenbutton-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-energy-intervals-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cms-energy-meters-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

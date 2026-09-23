@@ -1,0 +1,171 @@
+openapi: 3.2.0
+info:
+  title: Consumers Energy Outage Map ArcGIS REST Catalog API
+  version: '11.5'
+  summary: Anonymous, first-party ArcGIS REST services publishing Consumers Energy outage and service-territory geodata.
+  description: 'Consumers Energy (the regulated Michigan electric and natural-gas utility of CMS Energy)
+
+    operates a public, unauthenticated ArcGIS Server REST Services Directory at
+
+    `https://www.consumersenergy.com/arcgispublic/rest`.'
+  contact:
+    name: Consumers Energy
+    url: https://www.consumersenergy.com/outagemap
+  license:
+    name: Terms of use not stated on the service
+servers:
+- url: https://www.consumersenergy.com/arcgispublic/rest
+  description: Consumers Energy public ArcGIS Server REST Services Directory (anonymous).
+tags:
+- name: Catalog
+  description: Service discovery — folders, services and server version information.
+paths:
+  /info:
+    get:
+      summary: Get ArcGIS Server information
+      description: Returns the server version, the SOAP endpoint URL and token-service metadata.
+      operationId: getServerInfo
+      tags:
+      - Catalog
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Server information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerInfo'
+  /services:
+    get:
+      summary: List services and folders
+      description: Root of the REST Services Directory — the folders and services published anonymously.
+      operationId: listServices
+      tags:
+      - Catalog
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Service catalog.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCatalog'
+  /services/{folder}:
+    get:
+      summary: List services in a folder
+      operationId: listFolderServices
+      tags:
+      - Catalog
+      parameters:
+      - name: folder
+        in: path
+        required: true
+        description: Folder name as returned by listServices.
+        schema:
+          type: string
+          enum:
+          - PreProd
+          - Utilities
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Folder catalog.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCatalog'
+components:
+  parameters:
+    Format:
+      name: f
+      in: query
+      description: Response format. `json` and `pjson` were both observed returning 200.
+      required: false
+      schema:
+        type: string
+        enum:
+        - json
+        - pjson
+        - html
+        - geojson
+        - pbf
+        default: html
+      example: json
+  schemas:
+    ServiceCatalog:
+      type: object
+      properties:
+        currentVersion:
+          type: number
+        folders:
+          type: array
+          items:
+            type: string
+        services:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum:
+                - MapServer
+                - FeatureServer
+                - GPServer
+                - SymbolServer
+    ServerInfo:
+      type: object
+      properties:
+        currentVersion:
+          type: number
+          examples:
+          - 11.5
+        fullVersion:
+          type: string
+          examples:
+          - 11.5.0
+        soapUrl:
+          type: string
+          format: uri
+          examples:
+          - https://www.consumersenergy.com/arcgispublic/services
+        secureSoapUrl:
+          type:
+          - string
+          - 'null'
+        authInfo:
+          type: object
+          properties:
+            isTokenBasedSecurity:
+              type: boolean
+            tokenServicesUrl:
+              type: string
+              format: uri
+              examples:
+              - https://www.consumersenergy.com/arcgispublic/tokens/
+            shortLivedTokenValidity:
+              type: integer
+              examples:
+              - 60
+x-generated-from: live ArcGIS REST Services Directory metadata probed 2026-09-06
+x-provenance:
+  method: generated
+  generated: '2026-09-06'
+  source: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+  probes:
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/info?f=json
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services/CEOutageMap/MapServer?f=json
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer?f=json
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/FeatureServer?f=json
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services/ServiceDashboard/MapServer/3/query?where=1%3D1&returnCountOnly=true&f=json
+    status: 200
