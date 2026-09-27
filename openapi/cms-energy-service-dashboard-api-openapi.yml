@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Consumers Energy Outage Map ArcGIS REST … Service Dashboard…
+  title: Consumers Energy Outage Map ArcGIS REST … … Service…
   version: '11.5'
   summary: Anonymous, first-party ArcGIS REST services publishing Consumers Energy outage and service-territory geodata.
   description: 'Consumers Energy (the regulated Michigan electric and natural-gas utility of CMS Energy)
@@ -129,6 +129,15 @@ paths:
           $ref: '#/components/responses/ArcGisError'
 components:
   schemas:
+    LayerSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        geometryType:
+          type: string
     Field:
       type: object
       properties:
@@ -148,6 +157,29 @@ components:
           type: string
         length:
           type: integer
+    LayerInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          examples:
+          - Feature Layer
+        geometryType:
+          type: string
+          examples:
+          - esriGeometryPolygon
+        capabilities:
+          type: string
+        maxRecordCount:
+          type: integer
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
     ArcGisError:
       type: object
       properties:
@@ -189,29 +221,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LayerSummary'
-    LayerInfo:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        type:
-          type: string
-          examples:
-          - Feature Layer
-        geometryType:
-          type: string
-          examples:
-          - esriGeometryPolygon
-        capabilities:
-          type: string
-        maxRecordCount:
-          type: integer
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/Field'
     QueryResult:
       type: object
       description: 'A feature set, or a count object of the form {"count": n} when returnCountOnly=true.'
@@ -239,23 +248,39 @@ components:
               geometry:
                 type: object
                 additionalProperties: true
-    LayerSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        geometryType:
-          type: string
   parameters:
-    ReturnGeometry:
-      name: returnGeometry
+    Format:
+      name: f
       in: query
+      description: Response format. `json` and `pjson` were both observed returning 200.
+      required: false
+      schema:
+        type: string
+        enum:
+        - json
+        - pjson
+        - html
+        - geojson
+        - pbf
+        default: html
+      example: json
+    ResultRecordCount:
+      name: resultRecordCount
+      in: query
+      description: Page size. The service caps a single response at maxRecordCount 1000.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+    ReturnCountOnly:
+      name: returnCountOnly
+      in: query
+      description: Return only the matching feature count.
       required: false
       schema:
         type: boolean
-        default: true
+        default: false
     OutFields:
       name: outFields
       in: query
@@ -272,38 +297,6 @@ components:
       schema:
         type: string
       example: 1=1
-    Format:
-      name: f
-      in: query
-      description: Response format. `json` and `pjson` were both observed returning 200.
-      required: false
-      schema:
-        type: string
-        enum:
-        - json
-        - pjson
-        - html
-        - geojson
-        - pbf
-        default: html
-      example: json
-    ReturnCountOnly:
-      name: returnCountOnly
-      in: query
-      description: Return only the matching feature count.
-      required: false
-      schema:
-        type: boolean
-        default: false
-    ResultRecordCount:
-      name: resultRecordCount
-      in: query
-      description: Page size. The service caps a single response at maxRecordCount 1000.
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 1000
     DashboardLayerId:
       name: layerId
       in: path
@@ -318,6 +311,13 @@ components:
         minimum: 0
         maximum: 4
       example: 3
+    ReturnGeometry:
+      name: returnGeometry
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: true
   responses:
     ArcGisError:
       description: ArcGIS error envelope.

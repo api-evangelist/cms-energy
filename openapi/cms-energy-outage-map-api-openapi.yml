@@ -86,6 +86,15 @@ paths:
           $ref: '#/components/responses/ArcGisError'
 components:
   schemas:
+    LayerSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        geometryType:
+          type: string
     Field:
       type: object
       properties:
@@ -105,6 +114,29 @@ components:
           type: string
         length:
           type: integer
+    LayerInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          examples:
+          - Feature Layer
+        geometryType:
+          type: string
+          examples:
+          - esriGeometryPolygon
+        capabilities:
+          type: string
+        maxRecordCount:
+          type: integer
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
     ArcGisError:
       type: object
       properties:
@@ -146,29 +178,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LayerSummary'
-    LayerInfo:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        type:
-          type: string
-          examples:
-          - Feature Layer
-        geometryType:
-          type: string
-          examples:
-          - esriGeometryPolygon
-        capabilities:
-          type: string
-        maxRecordCount:
-          type: integer
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/Field'
     QueryResult:
       type: object
       description: 'A feature set, or a count object of the form {"count": n} when returnCountOnly=true.'
@@ -196,53 +205,7 @@ components:
               geometry:
                 type: object
                 additionalProperties: true
-    LayerSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        geometryType:
-          type: string
   parameters:
-    ReturnGeometry:
-      name: returnGeometry
-      in: query
-      required: false
-      schema:
-        type: boolean
-        default: true
-    OutFields:
-      name: outFields
-      in: query
-      description: Comma-separated field list, or `*` for all fields.
-      required: false
-      schema:
-        type: string
-      example: '*'
-    Where:
-      name: where
-      in: query
-      description: SQL-style attribute filter, e.g. `1=1`.
-      required: false
-      schema:
-        type: string
-      example: 1=1
-    OutageMapLayerId:
-      name: layerId
-      in: path
-      required: true
-      description: 'CEOutageMap layer id. 0 Service Territory; 1, 2 and 5 Number of Customers Affected;
-
-        3, 4 and 6 Percentage of Customers Affected.
-
-        '
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 6
-      example: 1
     Format:
       name: f
       in: query
@@ -258,14 +221,6 @@ components:
         - pbf
         default: html
       example: json
-    ReturnCountOnly:
-      name: returnCountOnly
-      in: query
-      description: Return only the matching feature count.
-      required: false
-      schema:
-        type: boolean
-        default: false
     ResultRecordCount:
       name: resultRecordCount
       in: query
@@ -275,6 +230,51 @@ components:
         type: integer
         minimum: 1
         maximum: 1000
+    ReturnGeometry:
+      name: returnGeometry
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: true
+    ReturnCountOnly:
+      name: returnCountOnly
+      in: query
+      description: Return only the matching feature count.
+      required: false
+      schema:
+        type: boolean
+        default: false
+    OutFields:
+      name: outFields
+      in: query
+      description: Comma-separated field list, or `*` for all fields.
+      required: false
+      schema:
+        type: string
+      example: '*'
+    OutageMapLayerId:
+      name: layerId
+      in: path
+      required: true
+      description: 'CEOutageMap layer id. 0 Service Territory; 1, 2 and 5 Number of Customers Affected;
+
+        3, 4 and 6 Percentage of Customers Affected.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 6
+      example: 1
+    Where:
+      name: where
+      in: query
+      description: SQL-style attribute filter, e.g. `1=1`.
+      required: false
+      schema:
+        type: string
+      example: 1=1
   responses:
     ArcGisError:
       description: ArcGIS error envelope.
