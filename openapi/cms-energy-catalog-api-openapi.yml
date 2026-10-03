@@ -77,6 +77,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/ServiceCatalog'
 components:
+  parameters:
+    Format:
+      name: f
+      in: query
+      description: Response format. `json` and `pjson` were both observed returning 200.
+      required: false
+      schema:
+        type: string
+        enum:
+        - json
+        - pjson
+        - html
+        - geojson
+        - pbf
+        default: html
+      example: json
   schemas:
     ServerInfo:
       type: object
@@ -135,22 +151,6 @@ components:
                 - FeatureServer
                 - GPServer
                 - SymbolServer
-  parameters:
-    Format:
-      name: f
-      in: query
-      description: Response format. `json` and `pjson` were both observed returning 200.
-      required: false
-      schema:
-        type: string
-        enum:
-        - json
-        - pjson
-        - html
-        - geojson
-        - pbf
-        default: html
-      example: json
 x-generated-from: live ArcGIS REST Services Directory metadata probed 2026-09-06
 x-provenance:
   method: generated
