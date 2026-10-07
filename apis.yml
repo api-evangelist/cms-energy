@@ -238,6 +238,8 @@ apis:
   - type: OpenAPI
     url: openapi/cms-energy-service-dashboard-api-openapi.yml
 common:
+- type: Pricing
+  url: https://greenbutton.consumersenergy.com/
 - type: AgenticAccess
   url: agentic-access/cms-energy-agentic-access.yml
 - type: DomainSecurity
