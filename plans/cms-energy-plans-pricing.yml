@@ -80,3 +80,22 @@ plans:
 plan_count: 2
 enterprise_only: false
 public_price_list: false
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  units: []
+  plans:
+  - name: Consumers Energy public outage services
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods: []
+  - name: Green Button Connect My Data — third party
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods: []
