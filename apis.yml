@@ -61,11 +61,11 @@ apis:
   - Smart Meter
   - Utility
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   properties:
   - url: https://utilityapi.com/docs/utilities/consumersenergy
     type: Documentation
-  - url: https://utilityapi.com/
+  - url: https://greenbutton.consumersenergy.com/
     type: Portal
   description: >-
     The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas
@@ -102,7 +102,7 @@ apis:
 - aid: cms-energy:cms-energy-authorizations-api
   name: CMS Energy Authorizations API
   description: The Authorizations API from CMS Energy — 2 operation(s) for authorizations.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   tags:
   - Authorization
   tags_raw:
@@ -117,7 +117,7 @@ apis:
 - aid: cms-energy:cms-energy-bills-api
   name: CMS Energy Bills API
   description: The Bills API from CMS Energy — 1 operation(s) for bills.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   tags:
   - Bills
   properties:
@@ -130,7 +130,7 @@ apis:
 - aid: cms-energy:cms-energy-greenbutton-api
   name: CMS Energy GreenButton API
   description: The GreenButton API from CMS Energy — 1 operation(s) for greenbutton.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   tags:
   - Green Button
   tags_raw:
@@ -145,7 +145,7 @@ apis:
 - aid: cms-energy:cms-energy-intervals-api
   name: CMS Energy Intervals API
   description: The Intervals API from CMS Energy — 1 operation(s) for intervals.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   tags:
   - Intervals
   properties:
@@ -158,7 +158,7 @@ apis:
 - aid: cms-energy:cms-energy-meters-api
   name: CMS Energy Meters API
   description: The Meters API from CMS Energy — 2 operation(s) for meters.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   tags:
   - Meters
   properties:
@@ -220,7 +220,7 @@ apis:
 - aid: cms-energy:cms-energy-catalog-api
   name: CMS Energy Catalog API
   description: Service discovery — folders, services and server version information.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   baseURL: https://utilityapi.com/api/v2
   tags:
   - Catalog
@@ -230,7 +230,7 @@ apis:
 - aid: cms-energy:cms-energy-service-dashboard-api
   name: CMS Energy Service Dashboard API
   description: County- and city-level outage rollups published as map and feature layers.
-  humanURL: https://utilityapi.com/docs/utilities/consumersenergy
+  humanURL: https://greenbutton.consumersenergy.com/
   baseURL: https://utilityapi.com/api/v2
   tags:
   - Service Dashboard
