@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Consumers Energy Outage Map ArcGIS REST … … Service………
+  title: Consumers Energy Outage Map ArcGIS REST … … Service…………
   version: '11.5'
   summary: Anonymous, first-party ArcGIS REST services publishing Consumers Energy outage and service-territory geodata.
   description: 'Consumers Energy (the regulated Michigan electric and natural-gas utility of CMS Energy)
@@ -129,6 +129,15 @@ paths:
           $ref: '#/components/responses/ArcGisError'
 components:
   schemas:
+    LayerSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        geometryType:
+          type: string
     LayerInfo:
       type: object
       properties:
@@ -152,25 +161,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Field'
-    Field:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-          examples:
-          - esriFieldTypeOID
-          - esriFieldTypeString
-          - esriFieldTypeInteger
-          - esriFieldTypeSmallInteger
-          - esriFieldTypeDouble
-          - esriFieldTypeDate
-          - esriFieldTypeGeometry
-        alias:
-          type: string
-        length:
-          type: integer
     ArcGisError:
       type: object
       properties:
@@ -185,42 +175,6 @@ components:
               type: array
               items:
                 type: string
-    MapServiceInfo:
-      type: object
-      properties:
-        currentVersion:
-          type: number
-        cimVersion:
-          type: string
-        serviceDescription:
-          type: string
-        mapName:
-          type: string
-        capabilities:
-          type: string
-        supportedExtensions:
-          type: string
-        supportedQueryFormats:
-          type: string
-        maxRecordCount:
-          type: integer
-        layers:
-          type: array
-          items:
-            $ref: '#/components/schemas/LayerSummary'
-        tables:
-          type: array
-          items:
-            $ref: '#/components/schemas/LayerSummary'
-    LayerSummary:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        geometryType:
-          type: string
     QueryResult:
       type: object
       description: 'A feature set, or a count object of the form {"count": n} when returnCountOnly=true.'
@@ -248,7 +202,60 @@ components:
               geometry:
                 type: object
                 additionalProperties: true
+    MapServiceInfo:
+      type: object
+      properties:
+        currentVersion:
+          type: number
+        cimVersion:
+          type: string
+        serviceDescription:
+          type: string
+        mapName:
+          type: string
+        capabilities:
+          type: string
+        supportedExtensions:
+          type: string
+        supportedQueryFormats:
+          type: string
+        maxRecordCount:
+          type: integer
+        layers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LayerSummary'
+        tables:
+          type: array
+          items:
+            $ref: '#/components/schemas/LayerSummary'
+    Field:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          examples:
+          - esriFieldTypeOID
+          - esriFieldTypeString
+          - esriFieldTypeInteger
+          - esriFieldTypeSmallInteger
+          - esriFieldTypeDouble
+          - esriFieldTypeDate
+          - esriFieldTypeGeometry
+        alias:
+          type: string
+        length:
+          type: integer
   parameters:
+    ReturnGeometry:
+      name: returnGeometry
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: true
     Where:
       name: where
       in: query
@@ -257,28 +264,6 @@ components:
       schema:
         type: string
       example: 1=1
-    ReturnCountOnly:
-      name: returnCountOnly
-      in: query
-      description: Return only the matching feature count.
-      required: false
-      schema:
-        type: boolean
-        default: false
-    DashboardLayerId:
-      name: layerId
-      in: path
-      required: true
-      description: 'ServiceDashboard layer id. 0 CustomersInterruptedPercent; 1 NumberOfInterruptions;
-
-        2 NumberOfWireDowns; 3 CE_County_Outages; 4 CE_City_Outages.
-
-        '
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 4
-      example: 3
     OutFields:
       name: outFields
       in: query
@@ -302,13 +287,20 @@ components:
         - pbf
         default: html
       example: json
-    ReturnGeometry:
-      name: returnGeometry
-      in: query
-      required: false
+    DashboardLayerId:
+      name: layerId
+      in: path
+      required: true
+      description: 'ServiceDashboard layer id. 0 CustomersInterruptedPercent; 1 NumberOfInterruptions;
+
+        2 NumberOfWireDowns; 3 CE_County_Outages; 4 CE_City_Outages.
+
+        '
       schema:
-        type: boolean
-        default: true
+        type: integer
+        minimum: 0
+        maximum: 4
+      example: 3
     ResultRecordCount:
       name: resultRecordCount
       in: query
@@ -318,6 +310,14 @@ components:
         type: integer
         minimum: 1
         maximum: 1000
+    ReturnCountOnly:
+      name: returnCountOnly
+      in: query
+      description: Return only the matching feature count.
+      required: false
+      schema:
+        type: boolean
+        default: false
   responses:
     ArcGisError:
       description: ArcGIS error envelope.
