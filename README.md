@@ -1,4 +1,4 @@
-# CMS Energy (cms-energy)
+# CMS Energy
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,62 +66,165 @@
 
 CMS Energy is an energy holding company whose primary subsidiary is Consumers Energy, an electric and natural gas utility serving customers in Michigan. Consumers Energy participates in the Green Button Connect My Data (GBCMD) program, exposing customer-authorized energy usage data to third parties via OAuth 2.0 - typically brokered through UtilityAPI - for use in energy management, demand response, EV charging, solar, and sustainability applications.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/cms-energy/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/cms-energy/refs/heads/main/apis.yml)
+**Areas:** Electric · Energy · Green Button · Michigan · Natural Gas · Utility · Fortune 500
 
-## Scope
+## CMS Energy on APIs.io
 
-- **Type:** Index
-- **Access:** 3rd-Party
+Everything profiled for CMS Energy is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cms-energy/](https://apis.io/providers/cms-energy/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (9)
 
-- Electric
-- Energy
-- Green Button
-- Michigan
-- Natural Gas
-- Utility
+- [Consumers Energy Green Button Connect My Data API](https://apis.io/apis/cms-energy/consumers-green-button-api/) — The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas usage data to registered third parties using the…
+- [CMS Energy Authorizations API](https://apis.io/apis/cms-energy/cms-energy-authorizations-api/) — The Authorizations API from CMS Energy — 2 operation(s) for authorizations.
+- [CMS Energy Bills API](https://apis.io/apis/cms-energy/cms-energy-bills-api/) — The Bills API from CMS Energy — 1 operation(s) for bills.
+- [CMS Energy GreenButton API](https://apis.io/apis/cms-energy/cms-energy-greenbutton-api/) — The GreenButton API from CMS Energy — 1 operation(s) for greenbutton.
+- [CMS Energy Intervals API](https://apis.io/apis/cms-energy/cms-energy-intervals-api/) — The Intervals API from CMS Energy — 1 operation(s) for intervals.
+- [CMS Energy Meters API](https://apis.io/apis/cms-energy/cms-energy-meters-api/) — The Meters API from CMS Energy — 2 operation(s) for meters.
+- [Consumers Energy Outage Map ArcGIS REST API](https://apis.io/apis/cms-energy/cms-energy-outage-map-api/) — Consumers Energy publishes its outage map data as an anonymous Esri ArcGIS Server 11.5 REST Services Directory on its own domain — no key, no account, no…
+- [CMS Energy Catalog API](https://apis.io/apis/cms-energy/cms-energy-catalog-api/) — Service discovery — folders, services and server version information.
+- [CMS Energy Service Dashboard API](https://apis.io/apis/cms-energy/cms-energy-service-dashboard-api/) — County- and city-level outage rollups published as map and feature layers.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-03-21
-- **Modified:** 2026-04-23
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### Consumers Energy Green Button Connect My Data API
+Event-driven and webhook contracts.
 
-The Consumers Energy Green Button Connect My Data API exposes customer-authorized electric and natural-gas usage data to registered third parties using the NAESB ESPI / Green Button standard. Authorization uses OAuth 2.0 with single sign-on or test-account scopes; data is delivered as Green Button XML or JSON via UtilityAPI's standardized endpoints (Meters, Bills, Intervals, Billing Summaries). Third parties register with Consumers Energy, are issued a client_id, and start in sandbox mode before being approved for live data.
+- [Cms Energy Webhooks](https://apis.io/asyncapis/cms-energy/cms-energy-webhooks/)
 
-- **Human URL:** [https://utilityapi.com/docs/utilities/consumersenergy](https://utilityapi.com/docs/utilities/consumersenergy)
+#### MCP servers (1)
 
-#### Tags
+Model Context Protocol servers that expose the API to agents.
 
-- Energy Usage
-- Green Button
-- OAuth2
-- Smart Meter
-- Utility
+- [cms-energy-mcp.yml](https://apis.io/servers/cms-energy/cms-energy-mcp-yml/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://utilityapi.com/docs/utilities/consumersenergy)
-- [Portal](https://utilityapi.com/)
-- [Postman Collection](collections/cms-energy.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/cms-energy.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Common Properties
+- [Cms Energy Agentic Access](https://apis.io/agentic-access/cms-energy/cms-energy-agentic-access/)
+
+#### Collections (6)
+
+Postman and Open Collection request collections.
+
+- [Consumers Energy Green Button Connect My Data API (UtilityAPI)](https://apis.io/collections/cms-energy/open-cms-energy/)
+- [Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations API](https://apis.io/collections/cms-energy/open-cms-energy-authorizations-api/)
+- [Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Bills API](https://apis.io/collections/cms-energy/open-cms-energy-bills-api/)
+- [Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations GreenButton API](https://apis.io/collections/cms-energy/open-cms-energy-greenbutton-api/)
+- [Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Intervals API](https://apis.io/collections/cms-energy/open-cms-energy-intervals-api/)
+- [Consumers Energy Green Button Connect My Data API (UtilityAPI) Authorizations Meters API](https://apis.io/collections/cms-energy/open-cms-energy-meters-api/)
+
+#### Overlays (6)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Cms Energy Authorizations Api Overlay](https://apis.io/overlays/cms-energy/cms-energy-authorizations-api-overlay/)
+- [Cms Energy Bills Api Overlay](https://apis.io/overlays/cms-energy/cms-energy-bills-api-overlay/)
+- [Cms Energy Greenbutton Api Overlay](https://apis.io/overlays/cms-energy/cms-energy-greenbutton-api-overlay/)
+- [Cms Energy Intervals Api Overlay](https://apis.io/overlays/cms-energy/cms-energy-intervals-api-overlay/)
+- [Cms Energy Meters Api Overlay](https://apis.io/overlays/cms-energy/cms-energy-meters-api-overlay/)
+- [Cms Energy Outage Map Api Overlay](https://apis.io/overlays/cms-energy/cms-energy-outage-map-api-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Cms Energy Authentication](https://apis.io/security/cms-energy/cms-energy-authentication/)
+- [Cms Energy Domain Security](https://apis.io/security/cms-energy/cms-energy-domain-security/)
+- [Cms Energy Vulnerability Disclosure](https://apis.io/security/cms-energy/cms-energy-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Cms Energy Scopes](https://apis.io/scopes/cms-energy/cms-energy-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Cms Energy Plans Pricing](https://apis.io/plans/cms-energy/cms-energy-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Cms Energy Rate Limits](https://apis.io/rate-limits/cms-energy/cms-energy-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Cms Energy Finops](https://apis.io/finops/cms-energy/cms-energy-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.cmsenergy.com)
-- [Website](https://www.consumersenergy.com)
 - [Documentation](https://utilityapi.com/docs/utilities/consumersenergy)
-- [About](https://www.cmsenergy.com/about-cms-energy/consumers-energy/)
+- [Getting started](https://utilityapi.com/docs/quickstart)
+- [API reference](https://utilityapi.com/docs/api)
+- [Pricing](https://greenbutton.consumersenergy.com/)
+- [Sign up](https://greenbutton.consumersenergy.com/third-party/register)
 - [Support](https://www.cmsenergy.com/contact-us/default.aspx)
-- [Privacy Policy](https://www.cmsenergy.com/privacy-statement/default.aspx)
-- [X (Twitter)](https://twitter.com/CMSEnergy)
-- [LinkedIn](https://www.linkedin.com/company/cms-energy/)
+- [Terms of service](https://greenbutton.consumersenergy.com/third-party/terms)
+- [Privacy policy](https://www.cmsenergy.com/privacy-statement/default.aspx)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 55.3** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 40.6 |
+| Contract governance | 0.0 |
+| Operational transparency | 50.0 |
+| Developer ergonomics | 58.9 |
+| Access clarity | 67.1 |
+
+**Agent readiness 34.3** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | documented (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 54.1** — Energy & Utilities
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cms-energy/](https://apis.io/providers/cms-energy/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for CMS Energy: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cms-energy/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
