@@ -1,0 +1,101 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: CMS Energy
+providerId: cms-energy
+created: '2026-05-04'
+modified: '2026-09-06'
+generated: '2026-09-06'
+method: searched
+source: https://greenbutton.consumersenergy.com/
+reconciled: true
+tags:
+  - Electric
+  - Energy
+  - Natural Gas
+  - Utility
+  - Green Button
+  - Michigan
+description: >-
+  CMS Energy publishes NO API price list, and that is the finding rather than a gap in the search.
+  Both public API surfaces are free at the point of use, for different reasons: the Consumers
+  Energy ArcGIS outage services are anonymous public geodata with no account of any kind, and the
+  Green Button Connect My Data program is described by Consumers Energy as "provided as a courtesy
+  to Consumers Energy customers". Access to GBCMD is gated by registration and utility review, not
+  by payment.
+notes: >-
+  Supersedes the 2026-05-04 bulk-sweep placeholder. Verified 2026-09-06: no pricing page, no fee
+  schedule, and no charge language anywhere in the Consumers Energy Third Party Agreement at
+  https://greenbutton.consumersenergy.com/third-party/terms (searched for fee / charge / cost —
+  the only hits are indemnity boilerplate). The platform Consumers Energy licenses publishes its
+  own pricing at https://utilityapi.com/pricing, but that is a price CMS Energy pays its vendor,
+  not one a developer pays CMS Energy, so it is not recorded as a CMS Energy plan.
+sources:
+  - url: https://greenbutton.consumersenergy.com/
+    status: 200
+  - url: https://greenbutton.consumersenergy.com/third-party/terms
+    status: 200
+  - url: https://www.consumersenergy.com/arcgispublic/rest/services?f=json
+    status: 200
+plans:
+  - id: cms-energy-arcgis-public
+    name: Consumers Energy public outage services
+    type: free
+    price: '0.00'
+    currency: USD
+    billing_period: none
+    onboarding: none
+    description: >-
+      Anonymous ArcGIS REST and SOAP access to outage and service-territory geodata. No account,
+      no key, no registration. Verified by an unauthenticated probe returning real data.
+    limits:
+      - maxRecordCount 1000 features per response
+      - No published request-rate limit; robots.txt disallows crawling /arcgispublic/*
+    elements:
+      - name: CEOutageMap MapServer (7 layers)
+      - name: ServiceDashboard MapServer and FeatureServer (5 layers)
+      - name: WSDL 1.1 SOAP contracts (55 operations per map service)
+  - id: cms-energy-green-button-connect
+    name: Green Button Connect My Data — third party
+    type: free
+    price: '0.00'
+    currency: USD
+    billing_period: none
+    onboarding: registration + utility review (not self-serve)
+    description: >-
+      Customer-authorized energy data sharing under NAESB ESPI / Green Button Connect My Data. No
+      charge to the customer or to the authorized third party is stated anywhere; the gate is
+      Consumers Energy's approval of the third-party registration, which moves the third party out
+      of sandbox mode.
+    quota:
+      requests: unmetered — no quota is published
+    limits:
+      - Bill and interval downloads at most once per minute
+      - All other GET and POST at most once per second
+    elements:
+      - name: NAESB ESPI / Green Button Connect My Data compliance
+      - name: Green Button OAuth 2.0 customer authorization
+      - name: Sandbox test scenarios before live approval
+      - name: Opt-in webhooks
+plan_count: 2
+enterprise_only: false
+public_price_list: false
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - free
+  units: []
+  plans:
+  - name: Consumers Energy public outage services
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods: []
+  - name: Green Button Connect My Data — third party
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods: []
