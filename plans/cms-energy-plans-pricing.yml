@@ -81,7 +81,7 @@ plan_count: 2
 enterprise_only: false
 public_price_list: false
 x-canonical:
-  generated: '2026-11-01'
+  generated: '2026-11-02'
   vocabulary: engine/economics/plans-canonical.yml
   models:
   - free
